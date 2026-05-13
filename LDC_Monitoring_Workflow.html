@@ -1,0 +1,2005 @@
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SW11 | LDC Monitoring Workflow + AOR Authority Approvals</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f6f6f6;
+      color: #363636;
+      padding: 20px;
+    }
+
+    /* ââ HEADER ââ */
+    .header {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 16px 28px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .header h1 { font-size: 18px; font-weight: 700; color: #1c1c1c; letter-spacing: 0.5px; }
+    .header p  { font-size: 11px; color: #5d5d5d; margin-top: 4px; }
+
+    /* ââ INFO BANNER ââ */
+    .info-banner {
+      background: linear-gradient(135deg, #323232, #606060);
+      border-radius: 8px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .info-banner .ib-icon { font-size: 20px; }
+    .info-banner .ib-body { flex: 1; }
+    .info-banner .ib-title { font-size: 12.5px; font-weight: 700; color: #ffffff; }
+    .info-banner .ib-sub   { font-size: 10px; color: #dadada; margin-top: 2px; }
+
+    /* ââ CONTROLS ââ */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .filter-tabs { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
+    .filter-tab {
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: 1.5px solid #e7e7e7;
+      background: #ffffff;
+      font-size: 9.5px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #545454;
+      transition: all 0.15s;
+      white-space: nowrap;
+      letter-spacing: 0.2px;
+    }
+    .filter-tab:hover { border-color: #727272; color: #727272; }
+    .filter-tab.active { background: #323232; color: #ffffff; border-color: #323232; }
+
+    .ctrl-group { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .ctrl-label { font-size: 10px; color: #7e7e7e; font-weight: 600; white-space: nowrap; }
+    .ctrl-input {
+      font-size: 11px; padding: 5px 8px;
+      border: 1.5px solid #e7e7e7; border-radius: 6px;
+      color: #363636; background: #ffffff; cursor: pointer;
+    }
+    .ctrl-input:focus { outline: none; border-color: #727272; }
+
+    .btn {
+      padding: 6px 13px;
+      border-radius: 6px;
+      border: none;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-success { background: #7b7b7b; color: #ffffff; }
+    .btn-success:hover { background: #505050; }
+    .btn-blue { background: #727272; color: #ffffff; }
+    .btn-blue:hover { background: #4c4c4c; }
+    .btn-pdf { background: #707070; color: #ffffff; }
+    .btn-pdf:hover { background: #5d5d5d; }
+    .btn-save { background: #7b7b7b; color: #ffffff; }
+    .btn-save:hover { background: #505050; }
+    .btn-save.saved { background: #505050; }
+
+    /* ââ GANTT OUTER (scrollable) ââ */
+    .gantt-outer {
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.09);
+      position: relative;
+    }
+    .gantt-header-outer {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      overflow: hidden;
+      border-radius: 10px 10px 0 0;
+    }
+    .gantt-header-outer .gantt-wrap-hdr {
+      background: #202020;
+      min-width: fit-content;
+    }
+    .gantt-scroll {
+      overflow-x: auto;
+    }
+    .gantt-wrap {
+      background: white;
+      border-radius: 0 0 10px 10px;
+      min-width: fit-content;
+    }
+
+    /* ââ ROWS ââ */
+    .g-row {
+      display: flex;
+      align-items: stretch;
+      border-bottom: 1px solid #f3f3f3;
+      min-height: 42px;
+      position: relative;
+    }
+    .g-row:hover .del-btn { opacity: 1; }
+    .g-row.hdr  { background: #202020; min-height: 0; }
+    .g-row.disc-hdr { min-height: 0; }
+    .g-row.phase-hdr { min-height: 0; background: #f9f9f9; border-top: 1px solid #e7e7e7; }
+    .g-row.hidden { display: none; }
+
+    /* ââ DISCIPLINE BANNER ââ */
+    .disc-banner {
+      width: 100%;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .disc-banner .disc-arrow { font-size: 10px; transition: transform 0.2s; display: inline-block; }
+    .disc-banner.collapsed .disc-arrow { transform: rotate(-90deg); }
+    .disc-banner .disc-count {
+      margin-left: auto;
+      background: rgba(0,0,0,0.25);
+      border-radius: 10px;
+      padding: 2px 8px;
+      font-size: 9px;
+      letter-spacing: 0.3px;
+    }
+
+    /* â DISC HEADER EDIT/DELETE â */
+    .disc-banner { position: relative;  padding-right: 40px; }
+    .disc-label-text {
+      display: inline;
+        cursor: text;
+          outline: none;
+            border-bottom: 1px solid transparent;
+              padding: 0 2px;
+                transition: border-color 0.15s;
+                  font: inherit;
+                    color: inherit;
+                      letter-spacing: inherit;
+                        text-transform: inherit;
+                        }
+                        .disc-label-text:focus,
+                        .disc-label-text:hover {
+                          border-bottom-color: rgba(255,255,255,0.5);
+                            background: rgba(255,255,255,0.08);
+                              border-radius: 2px;
+                              }
+                              .hdr-del-btn {
+                                position: absolute;
+                                    right: 8px;    
+                                top: 50%;
+                                      transform: translateY(-50%);
+                                        background: transparent;
+                                          border: 1px solid transparent;
+                                            color: transparent;
+                                              cursor: pointer;
+                                                font-size: 12px;
+                                                  padding: 2px 7px;
+                                                    border-radius: 3px;
+                                                      transition: all 0.2s;
+                                                        line-height: 1;
+                                                          z-index: 10;
+                                                          }
+                                                          .disc-banner:hover .hdr-del-btn {
+                                                            background: rgba(200,50,50,0.7);
+                                                              border-color: rgba(255,80,80,0.5);
+                                                                color: rgba(255,255,255,0.9);
+                                                                }
+                                                                .hdr-del-btn:hover {
+                                                                  background: rgba(220,30,30,0.95) !important;
+                                                                    border-color: #ff6666 !important;
+                                                                      color: #fff !important;
+                                                                      }
+                                                                      /* â ADD SECTION BUTTON â */
+                                                                      .add-section-row {
+                                                                        display: flex;
+                                                                          align-items: center;
+                                                                            justify-content: center;
+                                                                              padding: 8px 0;
+                                                                                min-height: 40px;
+                                                                                  background: #f5f5f5;
+                                                                                    border-top: 1px dashed #ccc;
+                                                                                      border-bottom: 1px dashed #ccc;
+                                                                                      }
+                                                                                      .add-section-btn {
+                                                                                        background: transparent;
+                                                                                          border: 1px dashed #999;
+                                                                                            color: #666;
+                                                                                              cursor: pointer;
+                                                                                                font-size: 12px;
+                                                                                                  padding: 5px 18px;
+                                                                                                    border-radius: 4px;
+                                                                                                      transition: all 0.2s;
+                                                                                                        display: flex;
+                                                                                                          align-items: center;
+                                                                                                            gap: 6px;
+                                                                                                              letter-spacing: 0.05em;
+                                                                                                                text-transform: uppercase;
+                                                                                                                  font-family: inherit;
+                                                                                                                  }
+                                                                                                                  .add-section-btn:hover {
+                                                                                                                    border-color: #444;
+                                                                                                                      color: #222;
+                                                                                                                        background: rgba(0,0,0,0.05);
+                                                                                                                        }
+                                                                                                                        .add-section-btn .plus-icon {
+                                                                                                                          font-size: 15px;
+                                                                                                                            font-weight: 400;
+                                                                                                                              line-height: 1;}
+
+    /* ââ PHASE LABEL ââ */
+    .phase-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #7e7e7e;
+      padding: 4px 16px 4px 26px;
+      width: 100%;
+    }
+    .phase-label { position: relative; padding-right: 40px; }
+    .phase-del-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: 1px solid transparent; color: transparent; cursor: pointer; font-size: 12px; padding: 2px 7px; border-radius: 3px; transition: all 0.2s; line-height: 1; z-index: 10; }
+    .phase-hdr:hover .phase-del-btn { background: rgba(200,50,50,0.7); border-color: rgba(255,80,80,0.5); color: rgba(255,255,255,0.9); }
+    .phase-del-btn:hover { background: rgba(220,30,30,0.95) !important; border-color: #ff6666 !important; color: #fff !important; }
+
+    /* ââ FIXED COLUMNS ââ */
+    .c-no {
+      width: 54px; flex-shrink: 0;
+      padding: 6px 4px 6px 10px;
+      border-right: 1px solid #ebebeb;
+      display: flex; align-items: center;
+    }
+    .c-no.hdr-cell {
+      border-right-color: #363636; font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px; color: #e7e7e7; padding: 9px 4px 9px 10px;
+    }
+    .c-task {
+      width: 240px; flex-shrink: 0;
+      padding: 6px 8px;
+      border-right: 1px solid #ebebeb;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .c-task.hdr-cell {
+      border-right-color: #363636; font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px; color: #e7e7e7;
+    }
+    .c-pm {
+      width: 108px; flex-shrink: 0;
+      padding: 6px 6px;
+      border-right: 1px solid #ebebeb;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .c-pm.hdr-cell {
+      border-right-color: #363636; font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px; color: #e7e7e7;
+    }
+    .c-sc {
+      width: 98px; flex-shrink: 0;
+      padding: 6px 6px;
+      border-right: 1px solid #ebebeb;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .c-sc.hdr-cell {
+      border-right-color: #363636; font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px; color: #e7e7e7;
+    }
+    .c-status {
+      width: 88px; flex-shrink: 0;
+      padding: 6px 4px;
+      border-right: 1px solid #ebebeb;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .c-status.hdr-cell {
+      border-right-color: #363636; font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px; color: #e7e7e7;
+    }
+    .c-timeline { flex: 1; position: relative; min-width: 720px; }
+
+    /* ââ WEEK HEADERS ââ */
+    .week-hdrs { display: flex; }
+    .week-hdr {
+      flex: 1;
+      text-align: center;
+      padding: 7px 2px 5px;
+      border-right: 1px solid #363636;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #e7e7e7;
+      min-width: 48px;
+      position: relative;
+    }
+    .week-hdr:last-child { border-right: none; }
+    .week-hdr .wn { display: block; }
+    .week-hdr .wd { display: block; font-size: 8px; font-weight: 400; color: #a4a4a4; margin-top: 1px; }
+    .week-hdr.add-col {
+      flex: none;
+      width: 34px;
+      cursor: pointer;
+      color: #7b7b7b;
+      border-left: 2px dashed #404040;
+      font-size: 18px;
+      font-weight: 300;
+      padding: 4px 2px;
+    }
+    .week-hdr.add-col:hover { background: #262626; }
+
+    /* ââ TASK INFO ââ */
+    .task-no-text {
+      font-size: 9px; font-weight: 800; color: #727272;
+      white-space: nowrap; outline: none; border-radius: 3px;
+      cursor: text; min-width: 28px; display: inline-block;
+    }
+    .task-no-text:focus {
+      background: #f5f5f5; padding: 1px 4px;
+      box-shadow: 0 0 0 2px #dadada;
+    }
+    .task-no-text:hover:not(:focus) {
+      background: #f6f6f6; border-radius: 3px;
+    }
+    .task-color-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+      cursor: pointer; border: 1.5px solid rgba(0,0,0,0.1);
+      transition: transform 0.12s;
+    }
+    .task-color-dot:hover { transform: scale(1.5); }
+    .task-info { flex: 1; min-width: 0; }
+    .task-name, .task-sub {
+      display: block; outline: none; width: 100%;
+      white-space: normal; overflow: visible;
+      border-radius: 3px;
+    }
+    .task-name {
+      font-size: 11px; font-weight: 600; color: #202020;
+    }
+    .task-name:focus { background: #f5f5f5; padding: 1px 4px; white-space: normal; overflow: visible; }
+    .task-sub {
+      font-size: 9px; color: #acacac; margin-top: 0px;
+    }
+    .task-sub:focus { background: #f9f9f9; padding: 1px 4px; white-space: normal; overflow: visible; }
+
+    .pm-text, .sc-text {
+      font-size: 9px; font-weight: 600; color: #545454;
+      background: #f1f1f1; border-radius: 20px;
+      padding: 2px 6px; text-align: center;
+      outline: none; width: 100%; display: block;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      cursor: text;
+    }
+    .pm-text:focus, .sc-text:focus { background: #f5f5f5; color: #606060; border-radius: 4px; }
+
+    .status-badge {
+      font-size: 8.5px; font-weight: 700;
+      border-radius: 10px;
+      padding: 3px 7px;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-block;
+      transition: all 0.12s;
+      border: none;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .status-badge:hover { opacity: 0.75; transform: scale(1.05); }
+
+    .del-btn {
+      opacity: 0; background: none; border: none; cursor: pointer;
+      color: #d3d3d3; font-size: 12px; line-height: 1;
+      padding: 0 2px; flex-shrink: 0;
+      transition: color 0.12s, opacity 0.12s;
+    }
+    .del-btn:hover { color: #707070; }
+
+    /* ââ GRID LINES ââ */
+    .grid-line { position: absolute; top: 0; bottom: 0; width: 1px; background: #f3f3f3; pointer-events: none; z-index: 0; }
+    .grid-alt   { position: absolute; top: 0; bottom: 0; background: rgba(0,0,0,0.012); pointer-events: none; z-index: 0; }
+
+    /* ââ BAR ââ */
+    .g-bar {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      height: 24px; border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: grab; user-select: none; z-index: 1;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+      transition: box-shadow 0.1s, height 0.1s;
+    }
+    .g-bar:hover { height: 27px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+    .g-bar:active { cursor: grabbing; }
+    body.is-dragging .g-bar { transition: none; }
+    body.is-dragging { cursor: grabbing !important; user-select: none; }
+    body.is-dragging * { cursor: grabbing !important; }
+
+    /* â ROW DRAG-TO-REORDER â */
+    .row-drag-handle {
+      display: flex; align-items: center; justify-content: center;
+      width: 14px; flex-shrink: 0;
+      cursor: grab; color: #b7b7b7; font-size: 11px;
+      opacity: 0; transition: opacity 0.15s; user-select: none;
+      padding-right: 2px;
+    }
+    .row-drag-handle:active { cursor: grabbing; }
+    .g-row:hover .row-drag-handle { opacity: 1; }
+    .g-row.row-dragging { opacity: 0.4; background: #f1f1f1 !important; }
+    .g-row.row-drag-over-top    { border-top:    2.5px solid #7a7a7a !important; }
+    .g-row.row-drag-over-bottom { border-bottom: 2.5px solid #7a7a7a !important; }
+    .row-drag-ghost {
+      position: fixed; z-index: 99999; pointer-events: none;
+      background: #ffffff; border: 1.5px solid #7a7a7a; border-radius: 6px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+      padding: 6px 12px; font-size: 12px; color: #202020;
+      max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      opacity: 0.95;
+    }
+
+    .bar-lbl {
+      font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.92);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      padding: 0 14px; pointer-events: none; letter-spacing: 0.2px;
+    }
+    .bar-handle {
+      position: absolute; top: 0; bottom: 0; width: 9px;
+      cursor: ew-resize; z-index: 2; display: flex; align-items: center; justify-content: center;
+    }
+    .bar-handle::after { content: 'â®'; font-size: 9px; color: rgba(255,255,255,0.45); }
+    .bar-handle.left  { left: 0;  border-radius: 5px 0 0 5px; }
+    .bar-handle.right { right: 0; border-radius: 0 5px 5px 0; }
+
+    /* ââ ADD ROW ââ */
+    .add-row-btn {
+      display: flex; align-items: center; gap: 5px;
+      background: none; border: none; cursor: pointer;
+      color: #acacac; font-size: 11px; font-weight: 600;
+      padding: 7px 16px; text-align: left;
+      transition: background 0.12s, color 0.12s;
+      width: 100%;
+    }
+    .add-row-btn:hover { background: #f9f9f9; color: #7b7b7b; }
+    .add-row-btn .plus { font-size: 14px; color: #7b7b7b; line-height: 1; }
+
+    /* ââ MILESTONE ââ */
+    /* -- MILESTONE SYMBOL ROW -- */
+    .g-row.milestone-symbol-row {
+      background: linear-gradient(90deg, #fafafa 0%, #fafafa 100%);
+      border-bottom: 1px solid #d0d0d0; min-height: 42px;
+    }
+    .milestone-symbol-row .c-status { overflow: visible; }
+    .milestone-symbol-row .status-badge { display: none; }
+    .milestone-symbol-row .c-timeline { overflow: visible !important; }
+    .ms-diamond-wrap {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 12px; height: 12px; cursor: grab; z-index: 8;
+    }
+    .ms-diamond-wrap:active { cursor: grabbing; }
+    .ms-diamond-wrap .ms-d {
+      width: 12px; height: 12px; background: #878787; transform: rotate(45deg);
+      border: 1.5px solid #535353; border-radius: 1px;
+      box-shadow: 0 1px 4px rgba(217,119,6,0.45);
+      transition: background 0.12s, transform 0.12s;
+    }
+    .ms-diamond-wrap:hover .ms-d { background: #686868; transform: rotate(45deg) scale(1.15); }
+    .ms-diamond-wrap.is-dragging .ms-d { background: #535353; }
+    .ms-span-bar {
+      position: absolute; height: 4px;
+      background: linear-gradient(90deg, #d0d0d0, #a7a7a7);
+      border-radius: 2px; top: 50%; transform: translateY(-50%);
+      z-index: 5; pointer-events: none;
+    }
+    .ms-label {
+      position: absolute; top: calc(50% - 18px);
+      font-size: 9px; font-weight: 700; color: #535353;
+      white-space: nowrap; pointer-events: none; z-index: 9;
+      background: rgba(255,251,235,0.9); padding: 1px 3px; border-radius: 3px;
+    }
+    .add-milestone-btn {
+      display: flex; align-items: center; gap: 5px;
+      background: none; border: none; cursor: pointer;
+      color: #535353; font-size: 11px; font-weight: 600;
+      padding: 7px 16px; text-align: left;
+      transition: background 0.12s; border-left: 1px solid #d0d0d0;
+    }
+    .add-milestone-btn:hover { background: #fafafa; color: #686868; }
+
+    .milestone-row {
+      background: linear-gradient(135deg, #1c1c1c, #323232);
+      padding: 13px 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .milestone-row .m-icon  { font-size: 20px; }
+    .milestone-row .m-title { font-size: 13px; font-weight: 700; color: #ffffff; }
+    .milestone-row .m-sub   { font-size: 10px; color: #a4a4a4; margin-top: 2px; }
+    .milestone-row .m-date  {
+      margin-left: auto; background: rgba(255,255,255,0.1); border-radius: 6px;
+      padding: 5px 12px; font-size: 11px; font-weight: 700; color: #a7a7a7;
+    }
+
+    /* ââ LEGEND ââ */
+    .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: #7e7e7e; }
+    .legend-dot  { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+    /* ââ TIP ââ */
+    .tip { font-size: 10px; color: #acacac; margin-top: 8px; padding-left: 2px; }
+    .tip kbd { background: #e7e7e7; border-radius: 3px; padding: 1px 5px; font-size: 9.5px; color: #545454; }
+
+    /* ââ PRINT / PDF ââ */
+    @media print {
+      @page { size: A2 landscape; margin: 8mm; }
+      body { background: white; padding: 4mm; }
+      .controls, .tip, .btn, .del-btn, .add-row-btn,
+      .bar-handle, .week-hdr.add-col { display: none !important; }
+      .gantt-outer { overflow: visible; box-shadow: none; }
+      .gantt-wrap  { border-radius: 0; }
+      .header, .info-banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 0; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .g-row { break-inside: avoid; }
+      .g-bar { box-shadow: none !important; }
+    }
+  
+      </style>
+</head>
+<body>
+<!-- HEADER -->
+<div class="header">
+  <h1>SW11  |  LDC Sub-Consultant Monitoring Workflow  +  AOR Authority Approvals  |  Stage 3 DD</h1>
+  <p>Dubai Creek Harbour â Plot SW11  &nbsp;Â·&nbsp;  Design Tomorrow FZ-LLC (LDC) + Zutari (AOR)  &nbsp;Â·&nbsp;  LOA 8348  &nbsp;Â·&nbsp;  AOR Report: DCH-SW11-ZUT-RPT-SD-AOR-400001 Rev.4 (19-Feb-26)</p>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="filter-tabs" id="filterTabs"></div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Week 1 Start:</span>
+    <input type="date" class="ctrl-input" id="startDateInput" onchange="onStartDateChange(this.value)"/>
+  </div>
+  <button class="btn btn-blue" onclick="addWeekColumn()">ï¼ Add Week</button>
+  <button class="btn btn-success" onclick="addGlobalTask()">ï¼ Add Task</button>
+  <button class="btn btn-pdf" onclick="savePDF()">ð¨ Save PDF</button>
+  <button class="btn btn-save" id="saveBtn" onclick="saveState()" title="Save all changes to browser storage">&#626262; Save</button>
+</div>
+
+<!-- GANTT -->
+<div class="gantt-outer">
+  <div class="gantt-header-outer" id="gantt-header"><div class="gantt-wrap-hdr"></div></div>
+  <div class="gantt-scroll" id="gantt-scroll">
+    <div class="gantt-wrap" id="gantt"></div>
+  </div>
+</div>
+
+<div class="tip">
+  ð¡ <kbd>Click</kbd> task name / PM / SC to edit &nbsp;Â·&nbsp;
+  <kbd>Drag</kbd> bar to move &nbsp;Â·&nbsp;
+  <kbd>Drag edges</kbd> to resize &nbsp;Â·&nbsp;
+  <kbd>â</kbd> dot to change colour &nbsp;Â·&nbsp;
+  <kbd>Status badge</kbd> to cycle status &nbsp;Â·&nbsp;
+  <kbd>â¶ Discipline header</kbd> to collapse/expand &nbsp;Â·&nbsp;
+  <kbd>ï¼ Add Week</kbd> to extend timeline
+</div>
+
+<div class="legend" id="legend"></div>
+
+<script>
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+//  CONFIGURATION
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+let numWeeks = 16;
+let weekStartDate = null;
+let activeFilter = 'all';
+
+const DISC_CONFIG = [
+  { id:'pm',  label:'LDC PROJECT MANAGEMENT â CROSS-DISCIPLINE', short:'PM Cross-Disc.', color:'#323232' },
+  { id:'arch', label:'ARCHITECTURE',                              short:'Architecture',   color:'#606060' },
+  { id:'str', label:'STRUCTURAL DESIGN',                         short:'Structural',     color:'#4b4b4b' },
+  { id:'mep', label:'MEP DESIGN',                                short:'MEP',            color:'#424242' },
+  { id:'id',  label:'INTERIOR DESIGN',                           short:'Interior Design',color:'#4e4e4e' },
+  { id:'lnd', label:'LANDSCAPE & HARDSCAPE',                     short:'Landscape',      color:'#505050' },
+  { id:'fac', label:'FAÃADE',                                    short:'FaÃ§ade',         color:'#4c4c4c' },
+  { id:'fls', label:'FIRE LIFE SAFETY',                          short:'Fire/FLS',       color:'#5d5d5d' },
+  { id:'tel', label:'TELECOM, ICT, AV & IT',                     short:'Telecom/ICT',    color:'#4e4e4e' },
+  { id:'sl',  label:'SPECIALIST LIGHTING',                       short:'Lighting',       color:'#818181' },
+  { id:'su',  label:'SUSTAINABILITY',                            short:'Sustainability', color:'#555555' },
+  { id:'inf', label:'INFRASTRUCTURE & UTILITIES',                short:'Infrastructure', color:'#5f5f5f' },
+  { id:'qs',  label:'COST MANAGEMENT & QS',                      short:'Cost/QS',        color:'#363636' },
+  { id:'aor', label:'ARCHITECT OF RECORD (AOR) â AUTHORITY APPROVALS & BUILDING PERMIT', short:'AOR', color:'#7e7e7e' },
+];
+
+const DISC_MAP = {};
+DISC_CONFIG.forEach(d => { DISC_MAP[d.id] = d; });
+
+const STATUSES = ['Not Started','In Progress','Complete','Blocked','On Hold'];
+const STATUS_STYLE = {
+  'Not Started':{ bg:'#9e9e9e', color:'#ffffff' },
+    'In Progress': { bg:'#2196f3', color:'#ffffff' },
+      'Complete':    { bg:'#4caf50', color:'#ffffff' },
+        'Blocked':     { bg:'#f44336', color:'#ffffff' },
+          'On Hold':     { bg:'#ff9800', color:'#ffffff' },
+};
+
+const COLORS = [
+  '#323232','#4b4b4b','#424242','#4e4e4e','#505050',
+  '#4c4c4c','#5d5d5d','#4e4e4e','#818181','#555555',
+  '#5f5f5f','#363636','#727272','#a2a2a2','#707070',  '#4caf50','#f44336','#9e9e9e','#2196f3',
+];
+
+let collapsed = {};
+let nextId = 200;
+let drag = null;
+let msDrag = null;
+
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+//  TASK DATA  (72 tasks from Excel)
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+let tasks = [
+
+  // ââ LDC PM CROSS-DISCIPLINE ââââââââââââââââââââââââââââââââââââââââââââââ
+  // PHASE 1 â MOBILISATION
+  { id:1,  disc:'pm', phase:'PHASE 1 â MOBILISATION', no:'P1.1',
+    name:'Receive Client NTP; issue DD Stage commencement notice to all sub-consultants',
+    sub:'Input: Client NTP',
+    pm:'Project Director / PM Lead', sc:'All SCs', wStart:1, wEnd:1, status:'Not Started', color:'#323232' },
+  { id:2,  disc:'pm', phase:'PHASE 1 â MOBILISATION', no:'P1.2',
+    name:'Confirm sub-consultant appointments, CVs, and insurance cover are current',
+    sub:'Input: Appt letters; LOA Clause 6',
+    pm:'PM Lead', sc:'All SCs', wStart:1, wEnd:1, status:'Not Started', color:'#323232' },
+  { id:3,  disc:'pm', phase:'PHASE 1 â MOBILISATION', no:'P1.3',
+    name:'Issue DD Stage Brief to all sub-consultants (scope, deliverables, format, programme, BIM)',
+    sub:'Input: LOA Sched. 3; DD Programme; Emaar EIR',
+    pm:'PM Lead', sc:'All SCs', wStart:1, wEnd:1, status:'Not Started', color:'#323232' },
+  { id:4,  disc:'pm', phase:'PHASE 1 â MOBILISATION', no:'P1.4',
+    name:'Conduct LDC DD Stage Kick-off Meeting (all disciplines, Architecture team, PM)',
+    sub:'Input: DD Brief; NTP; programme',
+    pm:'Project Director', sc:'All SCs + Arch', wStart:1, wEnd:1, status:'Not Started', color:'#323232' },
+  { id:5,  disc:'pm', phase:'PHASE 1 â MOBILISATION', no:'P1.5',
+    name:'Establish communication protocol: CDE (BIM360/ACC), document numbering, transmittal format',
+    sub:'Input: Emaar CDE guidelines; BEP',
+    pm:'PM Lead + BIM Mgr', sc:'All SCs', wStart:1, wEnd:1, status:'Not Started', color:'#323232' },
+
+  // PHASE 2 â PROGRESS MONITORING
+  { id:6,  disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.1',
+    name:'Conduct weekly LDC design team progress meetings (all SCs + Architecture)',
+    sub:'Input: Meeting agenda; action register',
+    pm:'PM Lead', sc:'All SCs + Arch', wStart:1, wEnd:12, status:'Not Started', color:'#323232' },
+  { id:7,  disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.2',
+    name:'Issue and maintain master Design Deliverables Tracker (per Sched. 3) â updated weekly',
+    sub:'Input: LOA Sched. 3; progress from each SC',
+    pm:'PM Lead', sc:'All SCs + Arch', wStart:1, wEnd:12, status:'Not Started', color:'#323232' },
+  { id:8,  disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.3',
+    name:'Prepare and issue monthly LDC Progress Report to Emaar (per Sched. 3 Â§1.12)',
+    sub:'Input: Weekly minutes; deliverables tracker; programme',
+    pm:'PM Lead / Proj Director', sc:'Emaar / Client', wStart:4, wEnd:12, status:'Not Started', color:'#323232' },
+  { id:9,  disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.4',
+    name:'Manage RFI / Design Query register across all disciplines (issue, track, close out)',
+    sub:'Input: Design queries from Arch & SCs',
+    pm:'PM Lead', sc:'All SCs + Arch', wStart:1, wEnd:12, status:'Not Started', color:'#323232' },
+  { id:10, disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.5',
+    name:'Maintain master NOC Tracker â track all required authority NOC submissions and status',
+    sub:'Input: DM/DCD/DEWA/RTA requirements',
+    pm:'PM Lead + Proj Arch', sc:'â', wStart:1, wEnd:14, status:'Not Started', color:'#323232' },
+  { id:11, disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.6',
+    name:'Coordinate with Cost Consultant â ensure all disciplines providing BOQ inputs on schedule',
+    sub:'Input: Cost Consultant programme; DD drawings',
+    pm:'PM Lead', sc:'Cost Consultant + SCs', wStart:6, wEnd:12, status:'Not Started', color:'#323232' },
+
+  // PHASE 3 â CONSOLIDATED REVIEW
+  { id:12, disc:'pm', phase:'PHASE 3 â CONSOLIDATED REVIEW & QA GATE (Wks 10â13)', no:'P3.1',
+    name:'Receive final draft submissions from all sub-consultants and Architecture team',
+    sub:'Input: Completed deliverables from all disciplines',
+    pm:'PM Lead', sc:'All SCs + Arch', wStart:10, wEnd:12, status:'Not Started', color:'#323232' },
+  { id:13, disc:'pm', phase:'PHASE 3 â CONSOLIDATED REVIEW & QA GATE (Wks 10â13)', no:'P3.2',
+    name:'Conduct multi-discipline cross-check: verify all contractual deliverables per LOA Sched. 3',
+    sub:'Input: LOA Sched. 3; draft submission package',
+    pm:'PM Lead + Proj Director', sc:'â', wStart:11, wEnd:12, status:'Not Started', color:'#323232' },
+  { id:14, disc:'pm', phase:'PHASE 3 â CONSOLIDATED REVIEW & QA GATE (Wks 10â13)', no:'P3.3',
+    name:'Carry out QAQC Checklist review (all sections AâH) â coordinate with Architecture and BIM team',
+    sub:'Input: QAQC Checklist; all draft packages',
+    pm:'PM Lead + Proj Arch + BIM Mgr', sc:'â', wStart:11, wEnd:13, status:'Not Started', color:'#323232' },
+  { id:15, disc:'pm', phase:'PHASE 3 â CONSOLIDATED REVIEW & QA GATE (Wks 10â13)', no:'P3.4',
+    name:'Issue consolidated review comments to each sub-consultant and Architecture; manage responses',
+    sub:'Input: QAQC review results; PM cross-check comments',
+    pm:'PM Lead', sc:'All SCs + Arch', wStart:11, wEnd:12, status:'Not Started', color:'#323232' },
+  { id:16, disc:'pm', phase:'PHASE 3 â CONSOLIDATED REVIEW & QA GATE (Wks 10â13)', no:'P3.5',
+    name:'Receive revised final submission packages from all disciplines after comment resolution',
+    sub:'Input: Consolidated review comments; revised packages',
+    pm:'PM Lead', sc:'All SCs + Arch', wStart:12, wEnd:13, status:'Not Started', color:'#323232' },
+
+  // PHASE 4 â CONSOLIDATED SUBMISSION
+  { id:17, disc:'pm', phase:'PHASE 4 â CONSOLIDATED SUBMISSION (Wks 13â14)', no:'P4.1',
+    name:'Compile full LDC Consolidated DD submission package (all disciplines; authority + Client format)',
+    sub:'Input: Final packages + QAQC checklist + NOC Tracker',
+    pm:'PM Lead + Proj Director', sc:'â', wStart:13, wEnd:13, status:'Not Started', color:'#323232' },
+  { id:18, disc:'pm', phase:'PHASE 4 â CONSOLIDATED SUBMISSION (Wks 13â14)', no:'P4.2',
+    name:'Prepare and issue Transmittal / Covering Letter to Emaar (per LOA format requirements)',
+    sub:'Input: Compiled submission package',
+    pm:'PM Lead / Proj Director', sc:'Emaar / Client', wStart:13, wEnd:13, status:'Not Started', color:'#323232' },
+  { id:19, disc:'pm', phase:'PHASE 4 â CONSOLIDATED SUBMISSION (Wks 13â14)', no:'P4.3',
+    name:'Submit Consolidated DD Package to Client (Emaar Design, EFM, ECM â per Sched. 3 Â§1.2)',
+    sub:'Input: Transmittal; full submission package',
+    pm:'Project Director', sc:'Emaar / Client', wStart:13, wEnd:14, status:'Not Started', color:'#323232' },
+  { id:20, disc:'pm', phase:'PHASE 4 â CONSOLIDATED SUBMISSION (Wks 13â14)', no:'P4.4',
+    name:'Receive Client review comments; log and distribute to relevant disciplines',
+    sub:'Input: Client (Emaar) review comments (Sched. 3 Â§1.4)',
+    pm:'PM Lead', sc:'All SCs + Arch', wStart:14, wEnd:14, status:'Not Started', color:'#323232' },
+  { id:21, disc:'pm', phase:'PHASE 4 â CONSOLIDATED SUBMISSION (Wks 13â14)', no:'P4.5',
+    name:'Monitor payment milestone: confirm Employer approval triggers 20% + 80% DD fee invoices',
+    sub:'Input: Employer approval; LOA payment schedule',
+    pm:'Proj Director / Finance', sc:'Emaar / Client', wStart:14, wEnd:14, status:'Not Started', color:'#323232' },
+
+  
+
+  // -- ARCHITECTURE --------------------------------------------------
+  { id:133, disc:'arch', phase:'GA (General Arrangement)', no:'A1.1',
+    name:'Tower 02 GA Plans',
+    sub:'',
+    pm:'YS', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:134, disc:'arch', phase:'GA (General Arrangement)', no:'A1.2',
+    name:'GA Sections',
+    sub:'',
+    pm:'SS', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:135, disc:'arch', phase:'GA (General Arrangement)', no:'A1.3',
+    name:'GA Elevations',
+    sub:'',
+    pm:'SS', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:136, disc:'arch', phase:'Area Plans', no:'A2.1',
+    name:'GFA / BUA Plans',
+    sub:'',
+    pm:'DE / YS', sc:'GS / HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:137, disc:'arch', phase:'Area Plans', no:'A2.2',
+    name:'Saleable Area Plans',
+    sub:'',
+    pm:'DE / YS', sc:'GS / HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:138, disc:'arch', phase:'Interior', no:'A3.1',
+    name:'Floor Type / Finish Plans',
+    sub:'',
+    pm:'YS', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:139, disc:'arch', phase:'Interior', no:'A3.2',
+    name:'Floor Type Details (Build-Up Types and Transitions)',
+    sub:'',
+    pm:'YS', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:140, disc:'arch', phase:'Interior', no:'A3.3',
+    name:'RCP Type Plans (BOH)',
+    sub:'',
+    pm:'DE', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:141, disc:'arch', phase:'Interior', no:'A3.4',
+    name:'RCP Plans',
+    sub:'',
+    pm:'DE', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:142, disc:'arch', phase:'Interior', no:'A3.5',
+    name:'Ceiling Details',
+    sub:'',
+    pm:'DE', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:143, disc:'arch', phase:'Interior', no:'A3.6',
+    name:'Internal Elevations (BOH)',
+    sub:'',
+    pm:'HA', sc:'GS', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:144, disc:'arch', phase:'Interior', no:'A3.7',
+    name:'Internal Door Details (BOH)',
+    sub:'',
+    pm:'DE', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:145, disc:'arch', phase:'Interior', no:'A3.8',
+    name:'Internal Door Elevations',
+    sub:'',
+    pm:'DE', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:146, disc:'arch', phase:'Interior', no:'A3.9',
+    name:'Wall Type / Finish Plans',
+    sub:'',
+    pm:'GS', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:147, disc:'arch', phase:'Interior', no:'A3.10',
+    name:'Wall Details 1/5',
+    sub:'',
+    pm:'GS', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:148, disc:'arch', phase:'Circulation', no:'A4.1',
+    name:'Ramp Section',
+    sub:'',
+    pm:'KF', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:149, disc:'arch', phase:'Circulation', no:'A4.2',
+    name:'Cores',
+    sub:'',
+    pm:'YS', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:150, disc:'arch', phase:'Circulation', no:'A4.3',
+    name:'Lift Plan / Sections / Elevations + Details (BOH)',
+    sub:'',
+    pm:'JA', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:151, disc:'arch', phase:'Circulation', no:'A4.4',
+    name:'Stairs, Ramps and Walkways',
+    sub:'',
+    pm:'KF', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:152, disc:'arch', phase:'Part Plans', no:'A5.1',
+    name:'Podium Part Plans (Parking)',
+    sub:'',
+    pm:'KF', sc:'GS', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:153, disc:'arch', phase:'Part Plans', no:'A5.2',
+    name:'Podium Details (Parking)',
+    sub:'',
+    pm:'KF', sc:'GS', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:154, disc:'arch', phase:'Part Plans', no:'A5.3',
+    name:'Special Rooms',
+    sub:'',
+    pm:'HA', sc:'GS', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:155, disc:'arch', phase:'External Envelope', no:'A6.1',
+    name:'Facade Setting Out Plans',
+    sub:'',
+    pm:'SS', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:156, disc:'arch', phase:'External Envelope', no:'A6.2',
+    name:'Facade Details',
+    sub:'',
+    pm:'ADB', sc:'MY', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:157, disc:'arch', phase:'External Envelope', no:'A6.3',
+    name:'DA Elevations',
+    sub:'',
+    pm:'SS', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:158, disc:'arch', phase:'External Envelope', no:'A6.4',
+    name:'Roof Typical Details (T01 T02 POD CLN)',
+    sub:'',
+    pm:'ADB', sc:'MY', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:159, disc:'arch', phase:'External Envelope', no:'A6.5',
+    name:'External Door Details (BOH)',
+    sub:'',
+    pm:'SS', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:160, disc:'arch', phase:'External Envelope', no:'A6.6',
+    name:'External Door Elevations',
+    sub:'',
+    pm:'SS', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:161, disc:'arch', phase:'Schedules', no:'A7.1',
+    name:'Area Schedule',
+    sub:'',
+    pm:'YS', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:162, disc:'arch', phase:'Schedules', no:'A7.2',
+    name:'Internal Door and Ironmongery Schedule',
+    sub:'',
+    pm:'DE', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:163, disc:'arch', phase:'Schedules', no:'A7.3',
+    name:'External Door and Ironmongery Schedule',
+    sub:'',
+    pm:'SS', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:164, disc:'arch', phase:'Schedules', no:'A7.4',
+    name:'Internal Door Hardware Schedule',
+    sub:'',
+    pm:'DE', sc:'HA', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:165, disc:'arch', phase:'Schedules', no:'A7.5',
+    name:'External Door Hardware Schedule',
+    sub:'',
+    pm:'SS', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:166, disc:'arch', phase:'Schedules', no:'A7.6',
+    name:'External Window and Ironmongery Schedule (TBC)',
+    sub:'',
+    pm:'SS', sc:'ADB', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:167, disc:'arch', phase:'Schedules', no:'A7.7',
+    name:'Finish Schedule',
+    sub:'',
+    pm:'GS', sc:'MY', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:168, disc:'arch', phase:'Schedules', no:'A7.8',
+    name:'Louvre Schedule',
+    sub:'',
+    pm:'TBC', sc:'TBC', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:169, disc:'arch', phase:'Schedules', no:'A7.9',
+    name:'Access Hatch Schedule',
+    sub:'',
+    pm:'TBC', sc:'TBC', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:170, disc:'arch', phase:'Schedules', no:'A7.10',
+    name:'BOH Sanitaryware Schedule',
+    sub:'',
+    pm:'TBC', sc:'TBC', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:171, disc:'arch', phase:'Visuals and Documents', no:'A8.1',
+    name:'Specifications',
+    sub:'',
+    pm:'', sc:'', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:172, disc:'arch', phase:'Visuals and Documents', no:'A8.2',
+    name:'Reports',
+    sub:'',
+    pm:'', sc:'', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:173, disc:'arch', phase:'Visuals and Documents', no:'A8.3',
+    name:'Visuals',
+    sub:'',
+    pm:'', sc:'', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+  { id:174, disc:'arch', phase:'Visuals and Documents', no:'A8.4',
+    name:'Combined Drawings',
+    sub:'',
+    pm:'', sc:'', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
+
+  // ââ STRUCTURAL DESIGN ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  { id:22, disc:'str', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'S1.1',
+    name:'Issue DD Stage Structural Brief (scope, codes, deliverables per LOA Sched. 3)',
+    sub:'Input: LOA Sched. 3; Arch DD plans (SD); DM structural code',
+    pm:'PM Lead', sc:'Structural SC', wStart:1, wEnd:1, status:'Not Started', color:'#4b4b4b' },
+  { id:23, disc:'str', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'S1.2',
+    name:'Confirm Structural SC programme for DD stage (14-week); flag risks to overall programme',
+    sub:'Input: Structural SC DD programme draft',
+    pm:'PM Lead', sc:'Structural SC', wStart:1, wEnd:1, status:'Not Started', color:'#4b4b4b' },
+  { id:24, disc:'str', phase:'PHASE 2 â PROGRESS MONITORING', no:'S2.1',
+    name:'Monitor Structural SC progress in weekly design meetings; escalate delays to Project Director',
+    sub:'Input: Weekly meeting agenda; Structural progress report',
+    pm:'PM Lead', sc:'Structural SC', wStart:1, wEnd:10, status:'Not Started', color:'#4b4b4b' },
+  { id:25, disc:'str', phase:'PHASE 2 â PROGRESS MONITORING', no:'S2.2',
+    name:'Issue Architecture BIM updates to Structural SC; manage slab opening / penetration RFIs',
+    sub:'Input: Updated Architecture BIM; Structural RFIs',
+    pm:'PM Lead + BIM Mgr', sc:'Structural SC', wStart:1, wEnd:10, status:'Not Started', color:'#4b4b4b' },
+  { id:26, disc:'str', phase:'PHASE 2 â PROGRESS MONITORING', no:'S2.3',
+    name:'Review Structural intermediate draft drawings for completeness and consistency with Architecture',
+    sub:'Input: Structural draft drawing package (interim)',
+    pm:'PM Lead + Proj Arch', sc:'Structural SC', wStart:5, wEnd:9, status:'Not Started', color:'#4b4b4b' },
+  { id:27, disc:'str', phase:'PHASE 3 â SUBMISSION REVIEW', no:'S3.1',
+    name:'Receive final Structural DD package; verify against LOA Sched. 3 deliverables checklist',
+    sub:'Input: Structural SC final DD package (calcs + drawings)',
+    pm:'PM Lead', sc:'Structural SC', wStart:10, wEnd:11, status:'Not Started', color:'#4b4b4b' },
+  { id:28, disc:'str', phase:'PHASE 3 â SUBMISSION REVIEW', no:'S3.2',
+    name:'Review and complete QAQC Checklist Section C (Structural) and Section G (BIM/Clash)',
+    sub:'Input: Structural DD package; QAQC Checklist',
+    pm:'PM Lead + BIM Mgr', sc:'Structural SC', wStart:11, wEnd:12, status:'Not Started', color:'#4b4b4b' },
+  { id:29, disc:'str', phase:'PHASE 3 â SUBMISSION REVIEW', no:'S3.3',
+    name:'Issue Structural review comments to SC; receive and verify revised package',
+    sub:'Input: Review comments log',
+    pm:'PM Lead', sc:'Structural SC', wStart:12, wEnd:13, status:'Not Started', color:'#4b4b4b' },
+
+  // ââ MEP DESIGN âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  { id:30, disc:'mep', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'M1.1',
+    name:'Issue DD Stage MEP Brief (scope, Emaar MEP checklists, DEWA requirements, calcs format)',
+    sub:'Input: LOA Sched. 3; Emaar MEP Checklists; DEWA NOC requirements',
+    pm:'PM Lead', sc:'MEP SC', wStart:1, wEnd:1, status:'Not Started', color:'#424242' },
+  { id:31, disc:'mep', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'M1.2',
+    name:'Confirm MEP SC programme; highlight DEWA load schedule and DCD coordination criticalities',
+    sub:'Input: MEP SC DD programme; DEWA/DCD submission timelines',
+    pm:'PM Lead', sc:'MEP SC', wStart:1, wEnd:1, status:'Not Started', color:'#424242' },
+  { id:32, disc:'mep', phase:'PHASE 2 â PROGRESS MONITORING', no:'M2.1',
+    name:'Monitor MEP SC progress in weekly meetings; track Emaar MEP design checklists completion',
+    sub:'Input: Weekly progress; Emaar MEP checklists status',
+    pm:'PM Lead', sc:'MEP SC', wStart:1, wEnd:10, status:'Not Started', color:'#424242' },
+  { id:33, disc:'mep', phase:'PHASE 2 â PROGRESS MONITORING', no:'M2.2',
+    name:'Coordinate Architecture BOH/MEP plant room layouts with MEP SC; issue Architecture BIM updates',
+    sub:'Input: Architecture BIM revisions; MEP plant room requirements',
+    pm:'PM Lead + Proj Arch + BIM Mgr', sc:'MEP SC', wStart:2, wEnd:10, status:'Not Started', color:'#424242' },
+  { id:34, disc:'mep', phase:'PHASE 2 â PROGRESS MONITORING', no:'M2.3',
+    name:'Review MEP intermediate draft calculations and drawings; confirm DEWA load schedule progress',
+    sub:'Input: MEP draft calculations / drawings (interim)',
+    pm:'PM Lead', sc:'MEP SC', wStart:5, wEnd:9, status:'Not Started', color:'#424242' },
+  { id:35, disc:'mep', phase:'PHASE 3 â SUBMISSION REVIEW', no:'M3.1',
+    name:'Receive final MEP DD package; verify against LOA Sched. 3 + Emaar MEP checklists',
+    sub:'Input: MEP SC final DD package; LOA Sched. 3; Emaar MEP checklists',
+    pm:'PM Lead', sc:'MEP SC', wStart:10, wEnd:11, status:'Not Started', color:'#424242' },
+  { id:36, disc:'mep', phase:'PHASE 3 â SUBMISSION REVIEW', no:'M3.2',
+    name:'Complete QAQC Checklist Sections D (MEP), E3 (pressurisation/FLS), G (BIM), H (NOC: DEWA, DCD)',
+    sub:'Input: MEP DD package; QAQC Checklist',
+    pm:'PM Lead + BIM Mgr', sc:'MEP SC', wStart:11, wEnd:12, status:'Not Started', color:'#424242' },
+  { id:37, disc:'mep', phase:'PHASE 3 â SUBMISSION REVIEW', no:'M3.3',
+    name:'Issue MEP review comments; receive revised package; confirm DEWA NOC package readiness',
+    sub:'Input: MEP review comments log',
+    pm:'PM Lead', sc:'MEP SC', wStart:12, wEnd:13, status:'Not Started', color:'#424242' },
+
+  // ââ INTERIOR DESIGN ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  { id:38, disc:'id', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'I1.1',
+    name:'Issue DD Stage ID Brief; confirm Emaar ID material set (LOA Sched. 1 â Repeatability Matrix)',
+    sub:'Input: LOA Sched. 3; Emaar ID finishes; SD ID package',
+    pm:'PM Lead', sc:'ID SC + Emaar ID', wStart:1, wEnd:1, status:'Not Started', color:'#4e4e4e' },
+  { id:39, disc:'id', phase:'PHASE 2 â PROGRESS MONITORING', no:'I2.1',
+    name:'Monitor ID SC progress; ensure FOH/BOH interface coordinated with Architecture team',
+    sub:'Input: Weekly progress; Architecture DD plans',
+    pm:'PM Lead', sc:'ID SC', wStart:1, wEnd:10, status:'Not Started', color:'#4e4e4e' },
+  { id:40, disc:'id', phase:'PHASE 2 â PROGRESS MONITORING', no:'I2.2',
+    name:'Coordinate Apartment Mockup documentation: confirm scope and submission with Client',
+    sub:'Input: SD ID mockup approval; Client confirmation of mockup unit',
+    pm:'PM Lead', sc:'ID SC + Client', wStart:4, wEnd:10, status:'Not Started', color:'#4e4e4e' },
+  { id:41, disc:'id', phase:'PHASE 3 â SUBMISSION REVIEW', no:'I3.1',
+    name:'Receive final ID DD package; verify all specs (finishes, lighting, white goods, sanitary, FF&E, joinery)',
+    sub:'Input: ID SC final DD package; LOA Sched. 3 checklist',
+    pm:'PM Lead', sc:'ID SC', wStart:10, wEnd:12, status:'Not Started', color:'#4e4e4e' },
+  { id:42, disc:'id', phase:'PHASE 3 â SUBMISSION REVIEW', no:'I3.2',
+    name:'Issue ID review comments; receive revised package',
+    sub:'Input: ID review comments log',
+    pm:'PM Lead', sc:'ID SC', wStart:12, wEnd:13, status:'Not Started', color:'#4e4e4e' },
+
+  // ââ LANDSCAPE & HARDSCAPE ââââââââââââââââââââââââââââââââââââââââââââââââ
+  { id:43, disc:'lnd', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'L1.1',
+    name:'Issue Landscape DD Brief; confirm podium interface with Architecture and RC structure',
+    sub:'Input: LOA Sched. 3; SD Landscape; Arch podium DD plans',
+    pm:'PM Lead', sc:'Landscape SC', wStart:1, wEnd:1, status:'Not Started', color:'#505050' },
+  { id:44, disc:'lnd', phase:'PHASE 2 â PROGRESS MONITORING', no:'L2.1',
+    name:'Monitor Landscape SC progress; coordinate podium-level architecture / landscape slab interface',
+    sub:'Input: Weekly progress; Architecture podium DD drawings',
+    pm:'PM Lead', sc:'Landscape SC', wStart:1, wEnd:10, status:'Not Started', color:'#505050' },
+  { id:45, disc:'lnd', phase:'PHASE 2 â PROGRESS MONITORING', no:'L2.2',
+    name:'Coordinate external services (manholes, irrigation, drainage) with MEP SC and Infrastructure SC',
+    sub:'Input: MEP external drainage; Infrastructure SC drawings',
+    pm:'PM Lead', sc:'Landscape + MEP + Infra', wStart:5, wEnd:10, status:'Not Started', color:'#505050' },
+  { id:46, disc:'lnd', phase:'PHASE 3 â SUBMISSION REVIEW', no:'L3.1',
+    name:'Receive final Landscape DD package; verify all schedules (hard, soft, lighting) and material boards',
+    sub:'Input: Landscape SC final DD package; LOA checklist',
+    pm:'PM Lead', sc:'Landscape SC', wStart:10, wEnd:12, status:'Not Started', color:'#505050' },
+  { id:47, disc:'lnd', phase:'PHASE 3 â SUBMISSION REVIEW', no:'L3.2',
+    name:'Issue Landscape review comments; receive revised package; confirm material board submission',
+    sub:'Input: Landscape review comments log',
+    pm:'PM Lead', sc:'Landscape SC', wStart:12, wEnd:13, status:'Not Started', color:'#505050' },
+
+  // ââ FAÃADE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  { id:48, disc:'fac', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'F1.1',
+    name:'Issue FaÃ§ade DD Brief; confirm BMU strategy, thermal performance, and Authority submission format',
+    sub:'Input: LOA Sched. 3; SD FaÃ§ade Report; Emaar faÃ§ade guidelines',
+    pm:'PM Lead', sc:'FaÃ§ade SC', wStart:1, wEnd:1, status:'Not Started', color:'#4c4c4c' },
+  { id:49, disc:'fac', phase:'PHASE 2 â PROGRESS MONITORING', no:'F2.1',
+    name:'Monitor FaÃ§ade SC progress; coordinate faÃ§ade/structure interface with Structural SC and Architecture',
+    sub:'Input: Weekly progress; Architecture elevations; Structural perimeter drawings',
+    pm:'PM Lead', sc:'FaÃ§ade SC', wStart:1, wEnd:10, status:'Not Started', color:'#4c4c4c' },
+  { id:50, disc:'fac', phase:'PHASE 2 â PROGRESS MONITORING', no:'F2.2',
+    name:'Coordinate FaÃ§ade drawings for DM Authority approval (align timing with Architecture DM submission)',
+    sub:'Input: Architecture DM submission programme; FaÃ§ade SC drawings',
+    pm:'PM Lead', sc:'FaÃ§ade SC + Arch', wStart:6, wEnd:12, status:'Not Started', color:'#4c4c4c' },
+  { id:51, disc:'fac', phase:'PHASE 3 â SUBMISSION REVIEW', no:'F3.1',
+    name:'Receive final FaÃ§ade DD package; complete QAQC Checklist Section F and Section G (BIM/Clash)',
+    sub:'Input: FaÃ§ade SC final DD package; QAQC Checklist',
+    pm:'PM Lead + BIM Mgr', sc:'FaÃ§ade SC', wStart:10, wEnd:12, status:'Not Started', color:'#4c4c4c' },
+  { id:52, disc:'fac', phase:'PHASE 3 â SUBMISSION REVIEW', no:'F3.2',
+    name:'Issue FaÃ§ade review comments; receive revised FaÃ§ade package',
+    sub:'Input: FaÃ§ade review comments log',
+    pm:'PM Lead', sc:'FaÃ§ade SC', wStart:12, wEnd:13, status:'Not Started', color:'#4c4c4c' },
+
+  // ââ FIRE LIFE SAFETY âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  { id:53, disc:'fls', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'FLS1.1',
+    name:'Issue FLS DD Brief; confirm DCD submission requirements and pressurisation/smoke control with MEP',
+    sub:'Input: LOA Sched. 3; SD FLS report; DCD requirements; CFD exclusion confirmed',
+    pm:'PM Lead', sc:'FLS SC', wStart:1, wEnd:1, status:'Not Started', color:'#5d5d5d' },
+  { id:54, disc:'fls', phase:'PHASE 2 â PROGRESS MONITORING', no:'FLS2.1',
+    name:'Monitor FLS SC progress; coordinate stair pressurisation and smoke control with MEP SC',
+    sub:'Input: Weekly progress; MEP pressurisation calcs; FLS drawings',
+    pm:'PM Lead', sc:'FLS SC + MEP SC', wStart:1, wEnd:10, status:'Not Started', color:'#5d5d5d' },
+  { id:55, disc:'fls', phase:'PHASE 3 â SUBMISSION REVIEW', no:'FLS3.1',
+    name:'Receive final FLS DD package; complete QAQC Checklist Section E and Section H2 (DCD NOC)',
+    sub:'Input: FLS SC final DD package; QAQC Checklist',
+    pm:'PM Lead', sc:'FLS SC', wStart:10, wEnd:12, status:'Not Started', color:'#5d5d5d' },
+  { id:56, disc:'fls', phase:'PHASE 3 â SUBMISSION REVIEW', no:'FLS3.2',
+    name:'Issue FLS review comments; receive revised package; confirm DCD NOC package readiness',
+    sub:'Input: FLS review comments log',
+    pm:'PM Lead', sc:'FLS SC', wStart:12, wEnd:13, status:'Not Started', color:'#5d5d5d' },
+
+  // ââ TELECOM, ICT, AV & IT ââââââââââââââââââââââââââââââââââââââââââââââââ
+  { id:57, disc:'tel', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'T1.1',
+    name:'Issue Telecom/ICT/AV DD Brief; confirm TRA/Etisalat/du regulatory submission requirements',
+    sub:'Input: LOA Sched. 3; SD Telecom; TRA submission requirements',
+    pm:'PM Lead', sc:'Telecom SC', wStart:1, wEnd:1, status:'Not Started', color:'#4e4e4e' },
+  { id:58, disc:'tel', phase:'PHASE 2 â PROGRESS MONITORING', no:'T2.1',
+    name:'Monitor Telecom SC progress; coordinate structured cabling with Architecture BOH and MEP containment',
+    sub:'Input: Weekly progress; Architecture BOH plans; MEP containment drawings',
+    pm:'PM Lead', sc:'Telecom SC', wStart:1, wEnd:10, status:'Not Started', color:'#4e4e4e' },
+  { id:59, disc:'tel', phase:'PHASE 3 â SUBMISSION REVIEW', no:'T3.1',
+    name:'Receive final Telecom DD package; verify ICT/AV/Security specs and authority submission readiness',
+    sub:'Input: Telecom SC final DD package; LOA Sched. 3 checklist',
+    pm:'PM Lead', sc:'Telecom SC', wStart:10, wEnd:13, status:'Not Started', color:'#4e4e4e' },
+
+  // ââ SPECIALIST LIGHTING ââââââââââââââââââââââââââââââââââââââââââââââââââ
+  { id:60, disc:'sl', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'SL1.1',
+    name:'Issue Specialist Lighting DD Brief; confirm exterior, interior and landscape lighting scope',
+    sub:'Input: LOA Sched. 3; SD Lighting; Landscape & ID interface',
+    pm:'PM Lead', sc:'Lighting SC', wStart:1, wEnd:1, status:'Not Started', color:'#818181' },
+  { id:61, disc:'sl', phase:'PHASE 2 â PROGRESS MONITORING', no:'SL2.1',
+    name:'Monitor Lighting SC progress; coordinate interior lighting with ID SC and exterior with Landscape SC',
+    sub:'Input: Weekly progress; ID SC drawings; Landscape SC drawings',
+    pm:'PM Lead', sc:'Lighting SC', wStart:1, wEnd:10, status:'Not Started', color:'#818181' },
+  { id:62, disc:'sl', phase:'PHASE 3 â SUBMISSION REVIEW', no:'SL3.1',
+    name:'Receive final Lighting DD package; verify lighting control system spec and lux calculation reports',
+    sub:'Input: Lighting SC final DD package; LOA Sched. 3 checklist',
+    pm:'PM Lead', sc:'Lighting SC', wStart:10, wEnd:13, status:'Not Started', color:'#818181' },
+
+  // ââ SUSTAINABILITY âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  { id:63, disc:'su', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'SU1.1',
+    name:'Issue Sustainability DD Brief; confirm Green Building standard (OM/DOA), energy modelling software, stack effect study',
+    sub:'Input: LOA Sched. 3; SD Sustainability; DM/DOA requirements',
+    pm:'PM Lead', sc:'Sustainability SC', wStart:1, wEnd:1, status:'Not Started', color:'#555555' },
+  { id:64, disc:'su', phase:'PHASE 2 â PROGRESS MONITORING', no:'SU2.1',
+    name:'Monitor Sustainability SC progress; track energy model and Green Building NOC submission readiness',
+    sub:'Input: Weekly progress; Architecture BIM (energy model input); MEP equipment selections',
+    pm:'PM Lead', sc:'Sustainability SC', wStart:1, wEnd:10, status:'Not Started', color:'#555555' },
+  { id:65, disc:'su', phase:'PHASE 3 â SUBMISSION REVIEW', no:'SU3.1',
+    name:'Receive final Sustainability DD package; verify Green Building NOC, energy model, stack effect study, waste management',
+    sub:'Input: Sustainability SC final DD package; LOA checklist',
+    pm:'PM Lead', sc:'Sustainability SC', wStart:10, wEnd:13, status:'Not Started', color:'#555555' },
+
+  // ââ INFRASTRUCTURE & UTILITIES âââââââââââââââââââââââââââââââââââââââââââ
+  { id:66, disc:'inf', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'IN1.1',
+    name:'Issue Infrastructure DD Brief; confirm utility tie-in points, SI review scope, and authority requirements',
+    sub:'Input: LOA Sched. 3; SD Infrastructure; DEWA/RTA/DM utility requirements',
+    pm:'PM Lead', sc:'Infrastructure SC', wStart:1, wEnd:1, status:'Not Started', color:'#5f5f5f' },
+  { id:67, disc:'inf', phase:'PHASE 2 â PROGRESS MONITORING', no:'IN2.1',
+    name:'Monitor Infrastructure SC progress; coordinate external services with Architecture, Landscape and MEP',
+    sub:'Input: Weekly progress; Architecture site plan; Landscape external services; MEP drainage',
+    pm:'PM Lead', sc:'Infrastructure SC', wStart:1, wEnd:10, status:'Not Started', color:'#5f5f5f' },
+  { id:68, disc:'inf', phase:'PHASE 3 â SUBMISSION REVIEW', no:'IN3.1',
+    name:'Receive final Infrastructure DD package; verify utility tie-in drawings, SI review, and specifications',
+    sub:'Input: Infrastructure SC final DD package; LOA checklist',
+    pm:'PM Lead', sc:'Infrastructure SC', wStart:10, wEnd:13, status:'Not Started', color:'#5f5f5f' },
+
+  // ââ ARCHITECT OF RECORD (AOR) â AUTHORITY APPROVALS âââââââââââââââââââââ
+  //
+  //  Week mapping: Wk 1 = DD programme start (~Apr 2026, post-SD approval).
+  //  Bar durations are the "Estimated Time (For Approval)" from the Approvals
+  //  Tracker (Appendix B, DCH-SW11-ZUT-RPT-SD-AOR-400001-00, Rev.4, 19-Feb-26).
+  //  Design stages:  General/Pre-Concept/Concept â Wks 1-3
+  //                  Schematic                   â Wks 1-4
+  //                  Full DD                     â Wks 12-16
+  //  Status reflects actual tracker status as at 19-Feb-26.
+  //
+  // PHASE 1 â DATA COLLECTION & INITIAL NOCs
+  { id:101, disc:'aor', phase:'PHASE 1 â DATA COLLECTION & INITIAL NOCs', no:'AOR-D1',
+    name:'EMAAR â Confirm LOA / Owner\u2019s Appointment Letter on file',
+    sub:'Est. approval: 35 days | Design Stage: General | Status: CLOSED 11-Feb-26',
+    pm:'Project Director', sc:'EMAAR', wStart:1, wEnd:5, status:'Complete', color:'#7e7e7e' },
+  { id:102, disc:'aor', phase:'PHASE 1 â DATA COLLECTION & INITIAL NOCs', no:'AOR-D2',
+    name:'DDA â Affection Plan / Site Plan confirmation (CRITICAL DELAY â chase resolution)',
+    sub:'Est. approval: 110 days | Design Stage: General | Planned: 03-Nov-25 | CRITICAL DELAY',
+    pm:'Project Director', sc:'DDA', wStart:1, wEnd:16, status:'Blocked', color:'#707070' },
+  { id:103, disc:'aor', phase:'PHASE 1 â DATA COLLECTION & INITIAL NOCs', no:'AOR-D3',
+    name:'DDA â Site Topography Survey; EMAAR â Site Details/Plot Information RFIs',
+    sub:'Est. approval: 4 days each | Design Stage: Pre-Concept | Both items: Not Yet Due',
+    pm:'PM Lead', sc:'DDA / EMAAR', wStart:1, wEnd:1, status:'Complete', color:'#7e7e7e' },
+
+  // PHASE 2 â PROJECT REGISTRATION (all items CLOSED as at 19-Feb-26)
+  { id:104, disc:'aor', phase:'PHASE 2 â PROJECT REGISTRATION (all CLOSED Feb 2026)', no:'AOR-R1',
+    name:'All Authorities â Project Registration NOCs (RTA, DEWA, du, DUSUP, EMPOWER, Etisalat, ITS, Parking, PTA, Rail, Roads)',
+    sub:'Est. approval: 10 days each | Design Stage: Pre-Concept | Planned: 09-Feb-26 | ALL CLOSED',
+    pm:'PM Lead + Proj Director', sc:'Multi-authority', wStart:1, wEnd:2, status:'Complete', color:'#7e7e7e' },
+  { id:105, disc:'aor', phase:'PHASE 2 â PROJECT REGISTRATION (all CLOSED Feb 2026)', no:'AOR-R2',
+    name:'EMAAR â Geotechnical & Geophysical Work Permit',
+    sub:'Est. approval: 15 days | Design Stage: Pre-Concept | Planned: 24-Nov-25 | Not Yet Due',
+    pm:'PM Lead', sc:'EMAAR', wStart:1, wEnd:3, status:'Not Started', color:'#7e7e7e' },
+
+  // PHASE 3 â PHASED PERMITS: CONCEPT STAGE
+  { id:106, disc:'aor', phase:'PHASE 3 â PHASED PERMITS: CONCEPT & SCHEMATIC STAGE', no:'AOR-PP1',
+    name:'DDA â Preliminary Submission (Concept stage)',
+    sub:'Est. approval: 10 days | Design Stage: Concept | Planned: 10-Jan-26 | Submission: 15-Jan-26 | Due: 25-Jan-26',
+    pm:'PM Lead', sc:'DDA', wStart:1, wEnd:2, status:'Not Started', color:'#7e7e7e' },
+  { id:107, disc:'aor', phase:'PHASE 3 â PHASED PERMITS: CONCEPT & SCHEMATIC STAGE', no:'AOR-PP2',
+    name:'DDA â Site Preparation Works: Site Office Permit + Hoarding & Sign Board Permit',
+    sub:'Est. approval: 4 days each | Design Stage: Concept | Planned: 09-Feb-26 | Submission: 12-Feb-26 | Due: 16-Feb-26',
+    pm:'PM Lead', sc:'DDA', wStart:1, wEnd:1, status:'Not Started', color:'#7e7e7e' },
+  { id:108, disc:'aor', phase:'PHASE 3 â PHASED PERMITS: CONCEPT & SCHEMATIC STAGE', no:'AOR-PP3',
+    name:'DDA â Site Preparation Works: Enabling Works Permit',
+    sub:'Est. approval: 11 days | Design Stage: Concept | Planned: 07-Feb-26 | Submission: 12-Feb-26 | Due: 23-Feb-26',
+    pm:'PM Lead', sc:'DDA', wStart:1, wEnd:2, status:'Not Started', color:'#7e7e7e' },
+  { id:109, disc:'aor', phase:'PHASE 3 â PHASED PERMITS: CONCEPT & SCHEMATIC STAGE', no:'AOR-PP4',
+    name:'DDA â Shoring & Excavation Works Permit',
+    sub:'Est. approval: 11 days | Design Stage: Schematic | Planned: 25-Mar-26 | Submission: 30-Mar-26 | Due: 10-Apr-26',
+    pm:'PM Lead', sc:'DDA', wStart:1, wEnd:2, status:'Not Started', color:'#7e7e7e' },
+  { id:110, disc:'aor', phase:'PHASE 3 â PHASED PERMITS: CONCEPT & SCHEMATIC STAGE', no:'AOR-PP5',
+    name:'DDA â Piling Works Permit',
+    sub:'Est. approval: 11 days | Design Stage: Schematic | Planned: 25-Mar-26 | Submission: 30-Mar-26 | Due: 10-Apr-26',
+    pm:'PM Lead', sc:'DDA', wStart:2, wEnd:3, status:'Not Started', color:'#7e7e7e' },
+
+  // PHASE 4 â EXTERNAL APPROVALS: SCHEMATIC STAGE
+  { id:111, disc:'aor', phase:'PHASE 4 â EXTERNAL APPROVALS: SCHEMATIC STAGE', no:'AOR-E1',
+    name:'RTA â Traffic Impact Study (TIS) submission and approval',
+    sub:'Est. approval: 45 days | Design Stage: Schematic | Planned: 27-Feb-26 | Submission: 27-Feb-26 | Due: 13-Apr-26',
+    pm:'PM Lead', sc:'RTA', wStart:1, wEnd:6, status:'In Progress', color:'#7e7e7e' },
+  { id:112, disc:'aor', phase:'PHASE 4 â EXTERNAL APPROVALS: SCHEMATIC STAGE', no:'AOR-E2',
+    name:'DDA â Design Exceptions / Non-compliance items resolution (natural light, ground floor usage)',
+    sub:'Est. approval: â | Design Stage: Concept | Coordinate design response with Arch team | Not Yet Due',
+    pm:'PM Lead + Proj Arch', sc:'DDA', wStart:1, wEnd:8, status:'Not Started', color:'#7e7e7e' },
+
+  // PHASE 5 â FULL DD SUBMISSION PACKAGE PREPARATION
+  { id:113, disc:'aor', phase:'PHASE 5 â FULL DD SUBMISSION PACKAGE PREPARATION (Wks 8â12)', no:'AOR-FP1',
+    name:'Compile and QA full DD authority submission package (Architectural, Structural, MEP, FLS, CCTV, Telecom)',
+    sub:'Input: Final packages from all disciplines; QAQC Checklist (signed); AOR mark-up responses resolved',
+    pm:'PM Lead + Proj Director', sc:'Zutari (AOR)', wStart:8, wEnd:12, status:'Not Started', color:'#7e7e7e' },
+  { id:114, disc:'aor', phase:'PHASE 5 â FULL DD SUBMISSION PACKAGE PREPARATION (Wks 8â12)', no:'AOR-FP2',
+    name:'Coordinate NOC-ready drawings across all disciplines for authority submission (Arch, Structural, MEP, FLS, FaÃ§ade)',
+    sub:'Input: Architecture drawings; all SC final packages; AOR review sign-off',
+    pm:'PM Lead + BIM Mgr', sc:'All SCs', wStart:8, wEnd:12, status:'Not Started', color:'#7e7e7e' },
+  { id:115, disc:'aor', phase:'PHASE 5 â FULL DD SUBMISSION PACKAGE PREPARATION (Wks 8â12)', no:'AOR-FP3',
+    name:'DCAA â Dubai Civil Aviation Authority NOC submission and approval',
+    sub:'Est. approval: 11 days | Design Stage: Full DD | Submission: 30-Jul-26 | Due: 10-Aug-26',
+    pm:'PM Lead', sc:'DCAA', wStart:10, wEnd:12, status:'Not Started', color:'#7e7e7e' },
+
+  // PHASE 6 â FULL DD PHASED PERMITS (DDA) â all items planned 25-Jul-26 â submit 30-Jul â due 10-Aug
+  { id:116, disc:'aor', phase:'PHASE 6 â FULL DD PHASED PERMITS: DDA (Est. 11 days each)', no:'AOR-DP1',
+    name:'DDA â Architectural Package for Building Permit',
+    sub:'Est. approval: 11 days | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Est. approval: 10-Aug-26',
+    pm:'PM Lead', sc:'DDA', wStart:12, wEnd:14, status:'Not Started', color:'#7e7e7e' },
+  { id:117, disc:'aor', phase:'PHASE 6 â FULL DD PHASED PERMITS: DDA (Est. 11 days each)', no:'AOR-DP2',
+    name:'DDA â Substructure Permit + Superstructure Permit',
+    sub:'Est. approval: 11 days each | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 10-Aug-26',
+    pm:'PM Lead', sc:'DDA', wStart:12, wEnd:14, status:'Not Started', color:'#7e7e7e' },
+  { id:118, disc:'aor', phase:'PHASE 6 â FULL DD PHASED PERMITS: DDA (Est. 11 days each)', no:'AOR-DP3',
+    name:'DDA â Sewerage Plot Connection + Drainage & FIC Location + Storm Water Plot Connection',
+    sub:'Est. approval: 11 days each | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 10-Aug-26',
+    pm:'PM Lead', sc:'DDA', wStart:12, wEnd:14, status:'Not Started', color:'#7e7e7e' },
+  { id:119, disc:'aor', phase:'PHASE 6 â FULL DD PHASED PERMITS: DDA (Est. 11 days each)', no:'AOR-DP4',
+    name:'DDA â Mechanical System Permit + Building Waste Management Report',
+    sub:'Est. approval: 11 days each | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 10-Aug-26',
+    pm:'PM Lead', sc:'DDA', wStart:12, wEnd:14, status:'Not Started', color:'#7e7e7e' },
+
+  // PHASE 7 â EXTERNAL AUTHORITY NOC SUBMISSIONS (Full DD)
+  { id:120, disc:'aor', phase:'PHASE 7 â EXTERNAL NOC SUBMISSIONS: FULL DD STAGE', no:'AOR-EA1',
+    name:'DEWA-ED â Electrical Load NOC',
+    sub:'Est. approval: 11 days | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 10-Aug-26',
+    pm:'PM Lead', sc:'DEWA-ED', wStart:12, wEnd:14, status:'Not Started', color:'#7e7e7e' },
+  { id:121, disc:'aor', phase:'PHASE 7 â EXTERNAL NOC SUBMISSIONS: FULL DD STAGE', no:'AOR-EA2',
+    name:'DEWA-ED â Electrical LV/HV NOC',
+    sub:'Est. approval: 30 days | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 29-Aug-26',
+    pm:'PM Lead', sc:'DEWA-ED', wStart:12, wEnd:16, status:'Not Started', color:'#7e7e7e' },
+  { id:122, disc:'aor', phase:'PHASE 7 â EXTERNAL NOC SUBMISSIONS: FULL DD STAGE', no:'AOR-EA3',
+    name:'DEWA-WD â Water Demand NOC',
+    sub:'Est. approval: 11 days | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 10-Aug-26',
+    pm:'PM Lead', sc:'DEWA-WD', wStart:12, wEnd:14, status:'Not Started', color:'#7e7e7e' },
+  { id:123, disc:'aor', phase:'PHASE 7 â EXTERNAL NOC SUBMISSIONS: FULL DD STAGE', no:'AOR-EA4',
+    name:'DEWA-WD â Water Supply NOC',
+    sub:'Est. approval: 30 days | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 29-Aug-26',
+    pm:'PM Lead', sc:'DEWA-WD', wStart:12, wEnd:16, status:'Not Started', color:'#7e7e7e' },
+  { id:124, disc:'aor', phase:'PHASE 7 â EXTERNAL NOC SUBMISSIONS: FULL DD STAGE', no:'AOR-EA5',
+    name:'DCD â Fire Life Safety (FLS) + Pump Room Details NOC',
+    sub:'Est. approval: 30 days | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 29-Aug-26',
+    pm:'PM Lead', sc:'DCD (Civil Defence)', wStart:12, wEnd:16, status:'Not Started', color:'#7e7e7e' },
+  { id:125, disc:'aor', phase:'PHASE 7 â EXTERNAL NOC SUBMISSIONS: FULL DD STAGE', no:'AOR-EA6',
+    name:'DCD â FaÃ§ade Approval NOC',
+    sub:'Est. approval: 30 days | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 29-Aug-26',
+    pm:'PM Lead + Proj Arch', sc:'DCD (Civil Defence)', wStart:12, wEnd:16, status:'Not Started', color:'#7e7e7e' },
+  { id:126, disc:'aor', phase:'PHASE 7 â EXTERNAL NOC SUBMISSIONS: FULL DD STAGE', no:'AOR-EA7',
+    name:'ETISALAT / du â Telecom NOC',
+    sub:'Est. approval: 30 days | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 29-Aug-26',
+    pm:'PM Lead', sc:'ETISALAT / du', wStart:12, wEnd:16, status:'Not Started', color:'#7e7e7e' },
+  { id:127, disc:'aor', phase:'PHASE 7 â EXTERNAL NOC SUBMISSIONS: FULL DD STAGE', no:'AOR-EA8',
+    name:'SIRA â CCTV NOC',
+    sub:'Est. approval: 11 days | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 10-Aug-26',
+    pm:'PM Lead', sc:'SIRA', wStart:12, wEnd:14, status:'Not Started', color:'#7e7e7e' },
+  { id:128, disc:'aor', phase:'PHASE 7 â EXTERNAL NOC SUBMISSIONS: FULL DD STAGE', no:'AOR-EA9',
+    name:'Empower â Empower NOC',
+    sub:'Est. approval: 11 days | Full DD | Planned: 25-Jul-26 | Submission: 30-Jul-26 | Due: 10-Aug-26',
+    pm:'PM Lead', sc:'Empower', wStart:12, wEnd:14, status:'Not Started', color:'#7e7e7e' },
+
+  // PHASE 8 â FINAL BUILDING PERMIT
+  { id:129, disc:'aor', phase:'PHASE 8 â FINAL BUILDING PERMIT', no:'AOR-BP1',
+    name:'DDA â Main Building Permit Application submission',
+    sub:'Est. approval: 4 days | Full DD | Planned: 10-Aug-26 | Submission: 13-Aug-26 | Due: 17-Aug-26',
+    pm:'Project Director', sc:'DDA', wStart:14, wEnd:15, status:'Not Started', color:'#7e7e7e' },
+  { id:130, disc:'aor', phase:'PHASE 8 â FINAL BUILDING PERMIT', no:'AOR-BP2',
+    name:'DDA â Plot Allocation / Demarcation',
+    sub:'Est. approval: 4 days | Full DD | Planned: 10-Aug-26 | Submission: 13-Aug-26 | Due: 17-Aug-26',
+    pm:'Project Director', sc:'DDA', wStart:14, wEnd:15, status:'Not Started', color:'#7e7e7e' },
+  { id:131, disc:'aor', phase:'PHASE 8 â FINAL BUILDING PERMIT', no:'AOR-BP3',
+    name:'DDA â Obtaining Permit Approval',
+    sub:'Est. approval: 4 days | Full DD | Planned: 26-Aug-26 | Submission: 29-Aug-26 | Due: 02-Sep-26',
+    pm:'Project Director', sc:'DDA', wStart:15, wEnd:16, status:'Not Started', color:'#7e7e7e' },
+  { id:132, disc:'aor', phase:'PHASE 8 â FINAL BUILDING PERMIT', no:'AOR-BP4',
+    name:'DDA â Obtaining Building Permit (FINAL)',
+    sub:'Est. approval: 4 days | Full DD | Planned: 26-Aug-26 | Submission: 29-Aug-26 | Due: 02-Sep-26',
+    pm:'Project Director', sc:'DDA', wStart:15, wEnd:16, status:'Not Started', color:'#7e7e7e' },
+
+  // ââ COST MANAGEMENT & QS âââââââââââââââââââââââââââââââââââââââââââââââââ
+  { id:69, disc:'qs', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'QS1.1',
+    name:'Issue Cost Consultant DD Brief; confirm BOQ format, elemental breakdown, and Pre-Tender Estimate template',
+    sub:'Input: LOA Sched. 3; SD Pre-Tender Estimate; Emaar BOQ format',
+    pm:'PM Lead', sc:'Cost Consultant SC', wStart:1, wEnd:1, status:'Not Started', color:'#363636' },
+  { id:70, disc:'qs', phase:'PHASE 2 â PROGRESS MONITORING', no:'QS2.1',
+    name:'Coordinate all discipline DD drawings with Cost Consultant for BOQ preparation; track SC inputs',
+    sub:'Input: DD drawings from all disciplines (Arch, Structure, MEP, ID, Landscape, FaÃ§ade)',
+    pm:'PM Lead', sc:'Cost Consultant + all SCs', wStart:6, wEnd:11, status:'Not Started', color:'#363636' },
+  { id:71, disc:'qs', phase:'PHASE 2 â PROGRESS MONITORING', no:'QS2.2',
+    name:'Monitor Pre-Tender Estimate progress; verify design remains within approved Client Budget (Sched. 3 Â§1.10)',
+    sub:'Input: Pre-Tender Estimate draft; Client approved Budget',
+    pm:'PM Lead + Proj Director', sc:'Cost Consultant SC', wStart:8, wEnd:12, status:'Not Started', color:'#363636' },
+  { id:72, disc:'qs', phase:'PHASE 3 â SUBMISSION REVIEW', no:'QS3.1',
+    name:'Receive final BOQ and Pre-Tender Estimate; verify completeness and alignment with Client-approved Budget',
+    sub:'Input: QS final BOQ + Pre-Tender Estimate; LOA checklist; Client Budget',
+    pm:'PM Lead + Proj Director', sc:'Cost Consultant SC', wStart:11, wEnd:13, status:'Not Started', color:'#363636' },
+];
+
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+//  HELPERS
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+function escHtml(s) {
+  return String(s||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function blurOnEnter(e) { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }
+function pct(n) { return (n / numWeeks) * 100; }
+
+function weekLabel(i) {
+  if (!weekStartDate) return '';
+  const d = new Date(weekStartDate);
+  d.setDate(d.getDate() + (i - 1) * 7);
+  return d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+}
+
+function statusStyle(s) {
+  const st = STATUS_STYLE[s] || STATUS_STYLE['Not Started'];
+  return `background:${st.bg};color:${st.color};`;
+}
+
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+//  FILTER TABS
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+function buildFilterTabs() {
+  const tabs = document.getElementById('filterTabs');
+  let html = `<button class="filter-tab${activeFilter==='all'?' active':''}" onclick="setFilter('all')">All Disciplines</button>`;
+  DISC_CONFIG.forEach(d => {
+    const cnt = tasks.filter(t => t.disc === d.id).length;
+    html += `<button class="filter-tab${activeFilter===d.id?' active':''}" onclick="setFilter('${d.id}')"
+      style="${activeFilter===d.id?`background:${d.color};border-color:${d.color};`:''}"
+    >${d.short} <span style="opacity:0.65">(${cnt})</span></button>`;
+  });
+  tabs.innerHTML = html;
+}
+function setFilter(id) { activeFilter = id; render(); }
+
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+//  RENDER
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+function initHeaderScrollSync() {
+  const scrollEl = document.getElementById('gantt-scroll');
+  const headerEl = document.getElementById('gantt-header');
+  if (!scrollEl || !headerEl) return;
+  scrollEl.onscroll = function() {
+    headerEl.scrollLeft = scrollEl.scrollLeft;
+  };
+  headerEl.scrollLeft = scrollEl.scrollLeft;
+}
+
+function buildHeaderRow() {
+  let weekCells = '';
+  for (let i = 1; i <= numWeeks; i++) {
+    const lbl = weekLabel(i);
+    weekCells += `<div class="week-hdr"><span class="wn">Wk ${i}</span>${lbl?`<span class="wd">${lbl}</span>`:''}</div>`;
+  }
+  weekCells += `<div class="week-hdr add-col" title="Add week column" onclick="addWeekColumn()">ï¼</div>`;
+  return `
+  <div class="g-row hdr">
+    <div class="c-no hdr-cell">No.</div>
+    <div class="c-task hdr-cell">Task / PM Action</div>
+    <div class="c-pm hdr-cell">PM Responsible</div>
+    <div class="c-sc hdr-cell">Sub-Consultant</div>
+    <div class="c-status hdr-cell">Status</div>
+    <div class="c-timeline"><div class="week-hdrs">${weekCells}</div></div>
+  </div>`;
+}
+
+function buildGridLines() {
+  let html = '';
+  for (let i = 1; i < numWeeks; i++) {
+    html += `<div class="grid-line" style="left:${pct(i)}%"></div>`;
+  }
+  // Alternate column shading every 2 weeks
+  for (let i = 0; i < numWeeks; i += 4) {
+    html += `<div class="grid-alt" style="left:${pct(i)}%;width:${pct(2)}%"></div>`;
+  }
+  return html;
+}
+
+function barStyle(task) {
+  const l = pct(task.wStart - 1);
+  const w = pct(task.wEnd - task.wStart + 1);
+  return `left:calc(${l}% + 3px);width:calc(${w}% - 6px);background:${(STATUS_STYLE[task.status]||STATUS_STYLE['Not Started']).bg};`;
+}
+
+function pct(w) { return (w / numWeeks) * 100; }
+
+function buildMilestoneTimeline(task) {
+  if (!task.markers || task.markers.length === 0) {
+    task.markers = [{ week: task.wStart || 1, label: task.no || 'MS' }];
+  }
+  let html = buildGridLines();
+  const sorted = [...task.markers].sort((a, b) => a.week - b.week);
+  if (sorted.length > 1) {
+    const lPct = pct(sorted[0].week - 1) + 100 / numWeeks / 2;
+    const rPct = pct(sorted[sorted.length-1].week - 1) + 100 / numWeeks / 2;
+    html += '<div class="ms-span-bar" style="left:' + lPct + '%;width:' + (rPct-lPct) + '%;"></div>';
+  }
+  task.markers.forEach((m, i) => {
+    const cPct = pct(m.week - 1) + 100 / numWeeks / 2;
+    html += '<div class="ms-diamond-wrap" id="msdw-' + task.id + '-' + i + '"' +
+      ' style="left:calc(' + cPct + '% - 6px);"' +
+      ' onmousedown="startMsDrag(event,' + task.id + ',' + i + ')"' +
+      ' title="Wk ' + m.week + '">' +
+      '<div class="ms-d"></div></div>' +
+      '<div class="ms-label" style="left:calc(' + cPct + '% + 9px);">' + escHtml(m.label||'') + '</div>';
+  });
+  return html;
+}
+
+function buildAddMarkerBtn(tid) {
+  return '<button onclick="addMilestoneMarker(' + tid + ')" title="Add diamond"' +
+    ' style="position:absolute;right:4px;top:50%;transform:translateY(-50%);' +
+    'background:rgba(255,251,235,0.9);border:1px solid #d0d0d0;border-radius:4px;' +
+    'color:#535353;font-size:9px;font-weight:700;padding:2px 5px;cursor:pointer;z-index:10;">' +
+    '+ &#9670;</button>';
+}
+
+function buildTaskRow(task) {
+  if (task.type === 'milestone') {
+    return '<div class="g-row milestone-symbol-row" data-id="' + task.id + '">' +
+    '<div class="row-drag-handle" onmousedown="startRowDrag(event)">&#x283F;</div>' +
+    '<div class="c-no"><span class="task-no-text" contenteditable="true"' +
+    ' onblur="saveField(' + task.id + ',\'no\',this.innerText.trim())"' +
+    ' onkeydown="blurOnEnter(event)">' + escHtml(task.no) + '</span></div>' +
+    '<div class="c-task">' +
+    '<div class="task-color-dot" style="background:#878787;cursor:default;"></div>' +
+    '<div class="task-info">' +
+    '<span class="task-name" contenteditable="true"' +
+    ' onblur="saveField(' + task.id + ',\'name\',this.innerText)"' +
+    ' onkeydown="blurOnEnter(event)" style="color:#535353;font-weight:700;">' + escHtml(task.name) + '</span>' +
+    '<span class="task-sub" contenteditable="true"' +
+    ' onblur="saveField(' + task.id + ',\'sub\',this.innerText)"' +
+    ' onkeydown="blurOnEnter(event)">' + escHtml(task.sub) + '</span>' +
+    '</div>' +
+    '<button class="del-btn" onclick="deleteTask(' + task.id + ')" title="Delete">&#x2715;</button>' +
+    '</div>' +
+    '<div class="c-pm"><span class="pm-text" contenteditable="true"' +
+    ' onblur="saveField(' + task.id + ',\'pm\',this.innerText)"' +
+    ' onkeydown="blurOnEnter(event)">' + escHtml(task.pm) + '</span></div>' +
+    '<div class="c-sc"><span class="sc-text" contenteditable="true"' +
+    ' onblur="saveField(' + task.id + ',\'sc\',this.innerText)"' +
+    ' onkeydown="blurOnEnter(event)">' + escHtml(task.sc) + '</span></div>' +
+    '<div class="c-status"><span style="font-size:16px;color:#878787;">&#9670;</span></div>' +
+    '<div class="c-timeline" id="tl-' + task.id + '" style="position:relative;overflow:visible;">' +
+    buildMilestoneTimeline(task) + buildAddMarkerBtn(task.id) + '</div>' +
+    '</div>';
+  }
+  const sStyle = statusStyle(task.status);
+  return `
+  <div class="g-row" data-id="${task.id}">
+    <div class="row-drag-handle" title="Drag to reorder" onmousedown="startRowDrag(event)">&#x283F;</div>
+    <div class="c-no"><span class="task-no-text" contenteditable="true"
+        onblur="saveField(${task.id},'no',this.innerText.trim())"
+        onkeydown="blurOnEnter(event)">${escHtml(task.no)}</span></div>
+    <div class="c-task">
+      <div class="task-color-dot" style="background:${task.color}" onclick="cycleColor(${task.id})" title="Click to change colour"></div>
+      <div class="task-info">
+        <span class="task-name" contenteditable="true"
+          onblur="saveField(${task.id},'name',this.innerText)"
+          onkeydown="blurOnEnter(event)">${escHtml(task.name)}</span>
+        <span class="task-sub" contenteditable="true"
+          onblur="saveField(${task.id},'sub',this.innerText)"
+          onkeydown="blurOnEnter(event)">${escHtml(task.sub)}</span>
+      </div>
+      <button class="del-btn" onclick="deleteTask(${task.id})" title="Delete row">&#x2715;</button>
+    </div>
+    <div class="c-pm"><span class="pm-text" contenteditable="true"
+      onblur="saveField(${task.id},'pm',this.innerText)"
+      onkeydown="blurOnEnter(event)">${escHtml(task.pm)}</span></div>
+    <div class="c-sc"><span class="sc-text" contenteditable="true"
+      onblur="saveField(${task.id},'sc',this.innerText)"
+      onkeydown="blurOnEnter(event)">${escHtml(task.sc)}</span></div>
+    <div class="c-status"><span class="status-badge" style="${sStyle}"
+      onclick="cycleStatus(${task.id})" title="Click to change status">${escHtml(task.status)}</span></div>
+    <div class="c-timeline" id="tl-${task.id}">
+      ${buildGridLines()}
+      <div class="g-bar" id="bar-${task.id}" style="${barStyle(task)}"
+        onmousedown="startDrag(event,${task.id},'move')"
+        title="Drag to move">
+        <div class="bar-handle left" onmousedown="startDrag(event,${task.id},'resize-left')"></div>
+        <span class="bar-lbl">${escHtml(task.no)}: ${escHtml(task.name)}</span>
+        <div class="bar-handle right" onmousedown="startDrag(event,${task.id},'resize-right')"></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildDiscHeader(disc, taskCount) {
+  const isCollapsed = collapsed[disc.id];
+    return `
+      <div class="g-row disc-hdr" data-disc="${disc.id}">
+          <div class="disc-banner${isCollapsed ? ' collapsed':''}" style="background:${disc.color}"
+                onclick="toggleDisc('${disc.id}')">
+                      <span class="disc-arrow">â¼</span>
+                            <span class="disc-label-text" contenteditable="true"
+                                    onclick="event.stopPropagation()"
+                                            onblur="renameDisc('${disc.id}', this.innerText)"
+                                                    onkeydown="blurOnEnter(event)">${escHtml(disc.label)}</span>
+                                                          <span class="disc-count">${taskCount} tasks</span>
+                                                                <button class="hdr-del-btn" onclick="event.stopPropagation();deleteDisc('${disc.id}')" title="Delete section">â</button>
+                                                                    </div>
+                                                                      </div>`;
+                                                                      }
+
+                                                                      function buildPhaseHeader(label, discId) {
+                                                                          const safeLabel = escHtml(label);
+                                                                            const safeDisc = escHtml(discId);
+                                                                              return '<div class="g-row phase-hdr" data-phase-disc="' + safeDisc + '" data-phase-label="' + safeLabel + '">' +
+                                                                                  '<span class="phase-label">' +
+                                                                                        '<span class="phase-label-text" contenteditable="true" ' +
+                                                                                                'onclick="event.stopPropagation()" ' +
+                                                                                                        'onblur="renamePhase(\'' + safeDisc + '\', this.dataset.orig, this.innerText)" ' +
+                                                                                                                'onkeydown="blurOnEnter(event)" ' +
+                                                                                                                        'data-orig="' + safeLabel + '">' + safeLabel + '</span>' +
+                                                                                                                              '<button class="phase-del-btn" onclick="deletePhase(\'' + safeDisc + '\', this.closest(\'[data-phase-label]\').dataset.phaseLabel)" title="Delete phase">\u2715</button>' +
+                                                                                                                                  '</span></div>';
+                                                                                                                                  }
+
+                                                                                                                                  function renameDisc(discId, newLabel) {
+                                                                                                                                    const disc = DISC_CONFIG.find(d => d.id === discId);
+                                                                                                                                      if (!disc) return;
+                                                                                                                                        const trimmed = (newLabel || '').trim();
+                                                                                                                                          if (!trimmed) return;
+                                                                                                                                            disc.label = trimmed;
+                                                                                                                                              saveState && saveState();
+                                                                                                                                              }
+
+                                                                                                                                              function deleteDisc(discId) {
+                                                                                                                                                const disc = DISC_CONFIG.find(d => d.id === discId);
+                                                                                                                                                  if (!disc) return;
+                                                                                                                                                    const taskCount = tasks.filter(t => t.disc === discId).length;
+                                                                                                                                                      let msg = 'Remove section "' + disc.label + '"?';
+                                                                                                                                                        if (taskCount > 0) msg += '\nThis will also delete its ' + taskCount + ' task(s).';
+                                                                                                                                                          if (!confirm(msg)) return;
+                                                                                                                                                            for (let i = tasks.length - 1; i >= 0; i--) {
+                                                                                                                                                                if (tasks[i].disc === discId) tasks.splice(i, 1);
+                                                                                                                                                                  }
+                                                                                                                                                                    const idx = DISC_CONFIG.findIndex(d => d.id === discId);
+                                                                                                                                                                      if (idx > -1) DISC_CONFIG.splice(idx, 1);
+                                                                                                                                                                        if (activeFilter === discId) activeFilter = 'all';
+                                                                                                                                                                          render();
+                                                                                                                                                                            saveState && saveState();
+                                                                                                                                                                            }
+
+                                                                                                                                                                            function addNewSection() {
+                                                                                                                                                                              const name = prompt('Enter new section name:');
+                                                                                                                                                                                if (!name || !name.trim()) return;
+                                                                                                                                                                                  const label = name.trim().toUpperCase();
+                                                                                                                                                                                    const short = label.split(/[\s&,\/]+/).slice(0, 2).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+                                                                                                                                                                                      let baseId = label.replace(/[^A-Z0-9]/g, '').substring(0, 8).toLowerCase() || 'sec';
+                                                                                                                                                                                        let id = baseId;
+                                                                                                                                                                                          let n = 1;
+                                                                                                                                                                                            while (DISC_CONFIG.find(d => d.id === id)) { id = baseId + n++; }
+                                                                                                                                                                                              const colors = ['#3a3a3a','#424242','#484848','#505050','#555555','#4b4b4b','#454545','#3d3d3d'];
+                                                                                                                                                                                                const color = colors[Math.floor(Math.random() * colors.length)];
+                                                                                                                                                                                                  DISC_CONFIG.push({ id, label, short, color });
+                                                                                                                                                                                                    render();
+                                                                                                                                                                                                      saveState && saveState();
+                                                                                                                                                                                                        setTimeout(function() {
+                                                                                                                                                                                                            const el = document.querySelector('[data-disc="' + id + '"]');
+                                                                                                                                                                                                                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                                                                                                                                                                                  }, 100);
+                                                                                                                                                                                                                  }
+function buildAddRowBtn(discId) {
+  return '<div class="g-row" style="min-height:0;display:flex;">' +
+    '<button class="add-row-btn" style="flex:1;" onclick="addTaskToDisc(\'' + discId + '\')">' +
+    '<span class="plus">+</span> Add task to ' + DISC_MAP[discId].short + '</button>' +
+    '<button class="add-milestone-btn" onclick="addMilestoneToDisc(\'' + discId + '\')" title="Add milestone symbol row">' +
+    '&#9670; Add Milestone Row</button>' +
+    '</div>';
+}
+
+function render() {
+  const ganttHdr = document.getElementById('gantt-header').querySelector('.gantt-wrap-hdr');
+  const gantt = document.getElementById('gantt');
+  ganttHdr.innerHTML = buildHeaderRow();
+  let html = '';
+
+  DISC_CONFIG.forEach(disc => {
+    const discTasks = tasks.filter(t => t.disc === disc.id);
+    if (activeFilter !== 'all' && activeFilter !== disc.id) return;
+
+    html += buildDiscHeader(disc, discTasks.length);
+
+    if (!collapsed[disc.id]) {
+      // Render in task-array order; emit phase header only when phase changes
+      let lastPhase = null;
+      discTasks.forEach(t => {
+        if (t.phase !== lastPhase) {
+          html += buildPhaseHeader(t.phase);
+          lastPhase = t.phase;
+        }
+        html += buildTaskRow(t);
+      });
+
+      html += buildAddRowBtn(disc.id);
+    }
+  });
+
+    // Add Section button
+      html += '<div class="g-row add-section-row"><button class="add-section-btn" onclick="addNewSection()" title="Add new section"><span class="plus-icon">\uFF0B</span> ADD SECTION</button></div>';
+
+  // Milestone footer
+  html += `
+  <div class="milestone-row">
+    <div class="m-icon">ð</div>
+    <div>
+      <div class="m-title">LDC DD Stage Consolidated Submission â All Disciplines</div>
+      <div class="m-sub">All sub-consultant packages received, reviewed &amp; QA-gated Â· QAQC Checklist signed Â· Consolidated submission to Emaar</div>
+    </div>
+    <div class="m-date">Wk 13â14</div>
+  </div>
+  <div class="milestone-row" style="background:linear-gradient(135deg,#535353,#7e7e7e)">
+    <div class="m-icon">ð</div>
+    <div>
+      <div class="m-title">AOR â Building Permit Obtained from DDA</div>
+      <div class="m-sub">All authority NOCs received Â· DDA Permit Approval Â· Full Building Permit issued (Est. 02-Sep-26)</div>
+    </div>
+    <div class="m-date">Wk 15â16</div>
+  </div>`;
+
+  gantt.innerHTML = html;
+  initHeaderScrollSync();
+  buildFilterTabs();
+  renderLegend();
+}
+
+function renderLegend() {
+  const statusItems = Object.entries(STATUS_STYLE).map(([s, st]) =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${st.bg};border:1.5px solid ${st.color}"></div>${s}</div>`
+  ).join('');
+  const discItems = DISC_CONFIG.map(d =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${d.color}"></div>${d.short}</div>`
+  ).join('');
+  document.getElementById('legend').innerHTML =
+    `<div style="display:flex;flex-wrap:wrap;gap:10px;width:100%">
+      <span style="font-size:10px;font-weight:700;color:#7e7e7e;margin-right:4px;align-self:center">STATUS:</span>
+      ${statusItems}
+      <span style="font-size:10px;font-weight:700;color:#7e7e7e;margin-left:12px;margin-right:4px;align-self:center">DISCIPLINES:</span>
+      ${discItems}
+    </div>`;
+}
+
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+//  DRAG & RESIZE
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+function startDrag(e, taskId, type) {
+  e.preventDefault();
+  e.stopPropagation();
+  const task = tasks.find(t => t.id === taskId);
+  const tlEl = document.getElementById(`tl-${taskId}`);
+  const rect = tlEl.getBoundingClientRect();
+  drag = {
+    taskId, type,
+    startX:     e.clientX,
+    origStart:  task.wStart,
+    origEnd:    task.wEnd,
+    weekWidth:  rect.width / numWeeks,
+    pendingStart: task.wStart,
+    pendingEnd:   task.wEnd,
+  };
+  document.body.classList.add('is-dragging');
+}
+
+document.addEventListener('mousemove', e => {
+  if (!drag) return;
+  const { taskId, type, startX, origStart, origEnd, weekWidth } = drag;
+  const task = tasks.find(t => t.id === taskId);
+  const barEl = document.getElementById(`bar-${taskId}`);
+  if (!task || !barEl) return;
+
+  const deltaX = e.clientX - startX;
+  const snapDelta = Math.round(deltaX / weekWidth);
+  const dur = origEnd - origStart;
+  const N = numWeeks;
+
+  let ns = origStart, ne = origEnd;
+
+  if (type === 'move') {
+    ns = Math.max(1, Math.min(N - dur, origStart + snapDelta));
+    ne = ns + dur;
+  } else if (type === 'resize-left') {
+    ns = Math.max(1, Math.min(origEnd, origStart + snapDelta));
+    ne = origEnd;
+  } else if (type === 'resize-right') {
+    ns = origStart;
+    ne = Math.max(origStart, Math.min(N, origEnd + snapDelta));
+  }
+
+  drag.pendingStart = ns;
+  drag.pendingEnd   = ne;
+
+  const leftPct  = pct(ns - 1);
+  const widthPct = pct(ne - ns + 1);
+  barEl.style.left  = `calc(${leftPct}% + 3px)`;
+  barEl.style.width = `calc(${widthPct}% - 6px)`;
+  barEl.title = `Wk ${ns}â${ne}`;
+});
+
+document.addEventListener('mouseup', () => {
+  if (!drag) return;
+  const { taskId, pendingStart, pendingEnd } = drag;
+  const task = tasks.find(t => t.id === taskId);
+  if (task) { task.wStart = pendingStart; task.wEnd = pendingEnd; }
+  drag = null;
+  document.body.classList.remove('is-dragging');
+  render();
+});
+
+
+// -- MILESTONE DIAMOND DRAG --
+function startMsDrag(e, taskId, dIdx) {
+  e.preventDefault(); e.stopPropagation();
+  const task = tasks.find(t => t.id === taskId);
+  if (!task || !task.markers) return;
+  const tlEl = document.getElementById('tl-' + taskId);
+  if (!tlEl) return;
+  const rect = tlEl.getBoundingClientRect();
+  msDrag = { taskId, dIdx, startX: e.clientX,
+    origWeek: task.markers[dIdx].week, weekWidth: rect.width / numWeeks };
+  document.body.classList.add('is-dragging');
+  const w = document.getElementById('msdw-' + taskId + '-' + dIdx);
+  if (w) w.classList.add('is-dragging');
+}
+
+document.addEventListener('mousemove', function(e) {
+  if (!msDrag) return;
+  const { taskId, dIdx, startX, origWeek, weekWidth } = msDrag;
+  const task = tasks.find(t => t.id === taskId);
+  if (!task || !task.markers) return;
+  const delta = Math.round((e.clientX - startX) / weekWidth);
+  task.markers[dIdx].week = Math.max(1, Math.min(origWeek + delta, numWeeks));
+  const tlEl = document.getElementById('tl-' + taskId);
+  if (tlEl) tlEl.innerHTML = buildMilestoneTimeline(task) + buildAddMarkerBtn(taskId);
+});
+
+document.addEventListener('mouseup', function() {
+  if (!msDrag) return; msDrag = null;
+  document.body.classList.remove('is-dragging');
+});
+
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+//  TASK ACTIONS
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+function deleteTask(id) {
+  if (!confirm('Delete this task?')) return;
+  tasks = tasks.filter(t => t.id !== id);
+  render();
+}
+
+function addTaskToDisc(discId) {
+  const disc = DISC_MAP[discId];
+  const discTasks = tasks.filter(t => t.disc === discId);
+  const lastPhase = discTasks.length ? discTasks[discTasks.length-1].phase : 'PHASE 1';
+  const id = nextId++;
+  tasks.push({ id, disc: discId, type: 'task', phase: lastPhase,
+    no: discId.toUpperCase() + '-' + id,
+    name: 'New Task â click to edit', sub: 'Input: click to edit',
+    pm: 'PM Lead', sc: 'â', wStart: 1, wEnd: 2,
+    status: 'Not Started', color: disc.color });
+  render();
+  setTimeout(() => {
+    const el = document.querySelector('[data-id="' + id + '"] .task-name');
+    if (el) { el.focus(); document.execCommand('selectAll', false, null); }
+  }, 50);
+}
+
+function addMilestoneToDisc(discId) {
+  const disc = DISC_MAP[discId];
+  const discTasks = tasks.filter(t => t.disc === discId);
+  const lastPhase = discTasks.length ? discTasks[discTasks.length-1].phase : 'PHASE 1';
+  const id = nextId++;
+  tasks.push({ id, disc: discId, type: 'milestone', phase: lastPhase,
+    no: 'MS-' + id,
+    name: 'Milestone â click to edit', sub: 'Description â click to edit',
+    pm: '', sc: '', wStart: 1, wEnd: 1, status: 'Not Started', color: '#878787',
+    markers: [{ week: 1, label: 'MS-' + id }] });
+  render();
+  setTimeout(() => {
+    const el = document.querySelector('[data-id="' + id + '"] .task-name');
+    if (el) { el.focus(); document.execCommand('selectAll', false, null); }
+  }, 50);
+}
+
+function addMilestoneMarker(taskId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task || task.type !== 'milestone') return;
+  if (!task.markers) task.markers = [];
+  const usedWeeks = task.markers.map(m => m.week);
+  let nw = 1; while (usedWeeks.includes(nw) && nw <= numWeeks) nw++;
+  task.markers.push({ week: nw, label: task.no });
+  const tlEl = document.getElementById('tl-' + taskId);
+  if (tlEl) tlEl.innerHTML = buildMilestoneTimeline(task) + buildAddMarkerBtn(taskId);
+}
+
+function addGlobalTask() {
+  const discId = activeFilter !== 'all' ? activeFilter : 'pm';
+  addTaskToDisc(discId);
+}
+
+function toggleDisc(discId) {
+  collapsed[discId] = !collapsed[discId];
+  render();
+}
+
+function cycleColor(id) {
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+  const idx = COLORS.indexOf(task.color);
+  task.color = COLORS[(idx + 1) % COLORS.length];
+  const dot = document.querySelector(`[data-id="${id}"] .task-color-dot`);
+  const bar = document.getElementById(`bar-${id}`);
+  if (dot) dot.style.background = task.color;
+
+}
+function cycleStatus(id) {
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+  const idx = STATUSES.indexOf(task.status);
+  task.status = STATUSES[(idx + 1) % STATUSES.length];
+  const badge = document.querySelector(`[data-id="${id}"] .status-badge`);
+  if (badge) {
+    const ss = STATUS_STYLE[task.status];
+    badge.style.background = ss.bg;
+    badge.style.color = ss.color;
+    badge.textContent = task.status;
+      const bar = document.getElementById(`bar-${id}`);
+        if (bar) bar.style.background = ss.bg;
+  }
+}
+
+function saveField(id, field, value) {
+  const task = tasks.find(t => t.id === id);
+  if (task) task[field] = value.trim() || task[field];
+}
+
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+//  WEEK COLUMNS
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+function addWeekColumn() {
+  numWeeks++;
+  render();
+  // Scroll to reveal new column
+  const outer = document.querySelector('.gantt-outer');
+  if (outer) outer.scrollLeft = outer.scrollWidth;
+}
+
+function onStartDateChange(val) {
+  weekStartDate = val ? new Date(val) : null;
+  render();
+}
+
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+//  PDF / PRINT
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+function savePDF() {
+  window.print();
+}
+
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+
+// ââââââââââââââââââââââââââââââââââââââââ
+//  ROW DRAG-TO-REORDER (syncs tasks[] so Save preserves row order)
+// ââââââââââââââââââââââââââââââââââââââââ
+(function(){
+  let dragSrcRow = null, ghost = null;
+  function getTaskRows() {
+    return Array.from(document.querySelectorAll('.g-row[data-id]'))
+      .filter(r => r.getAttribute('data-id') && r.getAttribute('data-id') !== 'null');
+  }
+  function clearDragStates() {
+    getTaskRows().forEach(r => r.classList.remove('row-drag-over-top','row-drag-over-bottom','row-dragging'));
+  }
+  function createGhost(row) {
+    const g = document.createElement('div');
+    g.className = 'row-drag-ghost';
+    const noEl = row.querySelector('.task-no-text');
+    const infoEl = row.querySelector('.task-info');
+    const no = noEl ? noEl.textContent.trim() : '';
+    let name = '';
+    if (infoEl) {
+      const lines = infoEl.textContent.trim().split('\n').map(s=>s.trim()).filter(Boolean);
+      name = lines[0] || '';
+    }
+    g.textContent = (no ? no + ': ' : '') + name.substring(0, 50);
+    document.body.appendChild(g);
+    return g;
+  }
+  function syncTasksToDOM() {
+    const rows = getTaskRows();
+    const orderedIds = rows.map(r => parseInt(r.getAttribute('data-id'), 10)).filter(n => !isNaN(n));
+    const taskMap = {};
+    tasks.forEach(t => { taskMap[t.id] = t; });
+    const reordered = orderedIds.map(id => taskMap[id]).filter(Boolean);
+    const inDom = new Set(orderedIds);
+    tasks.forEach(t => { if (!inDom.has(t.id)) reordered.push(t); });
+    tasks.length = 0;
+    reordered.forEach(t => tasks.push(t));
+    // Update milestone phase to match nearest preceding non-milestone task
+    let currentPhase = null;
+    for (const t of tasks) {
+      if (t.type !== 'milestone') { currentPhase = t.phase; }
+      else if (currentPhase) { t.phase = currentPhase; }
+    }
+  }
+  function onMove(e) {
+    if (!dragSrcRow) return;
+    if (ghost) { ghost.style.left=(e.clientX+12)+'px'; ghost.style.top=(e.clientY-10)+'px'; }
+    clearDragStates();
+    dragSrcRow.classList.add('row-dragging');
+    for (const row of getTaskRows()) {
+      if (row === dragSrcRow) continue;
+      const rect = row.getBoundingClientRect();
+      if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+        row.classList.add(e.clientY < rect.top + rect.height/2 ? 'row-drag-over-top' : 'row-drag-over-bottom');
+        break;
+      }
+    }
+  }
+  function onUp(e) {
+    if (!dragSrcRow) return;
+    document.body.classList.remove('is-dragging');
+    let targetRow = null, before = true;
+    for (const row of getTaskRows()) {
+      if (row === dragSrcRow) continue;
+      const rect = row.getBoundingClientRect();
+      if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+        targetRow = row; before = e.clientY < rect.top + rect.height/2; break;
+      }
+    }
+    clearDragStates();
+    if (ghost) { ghost.remove(); ghost = null; }
+    if (targetRow && targetRow !== dragSrcRow) {
+      dragSrcRow.parentNode.insertBefore(dragSrcRow, before ? targetRow : targetRow.nextSibling);
+      syncTasksToDOM();
+    }
+    dragSrcRow = null;
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+  }
+  window.startRowDrag = function(e) {
+    e.preventDefault(); e.stopPropagation();
+    dragSrcRow = e.currentTarget.closest('.g-row');
+    if (!dragSrcRow) return;
+    document.body.classList.add('is-dragging');
+    ghost = createGhost(dragSrcRow);
+    ghost.style.left=(e.clientX+12)+'px'; ghost.style.top=(e.clientY-10)+'px';
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  };
+})();
+
+//  SAVE / LOAD (localStorage)
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+const LS_KEY = 'sw11_tracker_v1';
+
+function saveState() {
+  try {
+    const state = {
+      tasks: tasks,
+      numWeeks: numWeeks,
+      weekStartDate: weekStartDate ? weekStartDate.toISOString() : null,
+      nextId: nextId
+    };
+    localStorage.setItem(LS_KEY, JSON.stringify(state));
+    const btn = document.getElementById('saveBtn');
+    if (btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '&#10003; Saved!';
+      btn.classList.add('saved');
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('saved'); }, 1800);
+    }
+  } catch(e) { alert('Save failed: ' + e.message); }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return false;
+    const state = JSON.parse(raw);
+    if (state.tasks && Array.isArray(state.tasks)) {
+      tasks = state.tasks;
+      numWeeks = state.numWeeks || 16;
+      weekStartDate = state.weekStartDate ? new Date(state.weekStartDate) : null;
+      nextId = state.nextId || 200;
+      if (weekStartDate) {
+        const inp = document.getElementById('startDateInput');
+        if (inp) inp.value = weekStartDate.toISOString().substring(0,10);
+      }
+      return true;
+    }
+  } catch(e) { console.warn('loadState failed:', e); }
+  return false;
+}
+
+//  INIT
+// âââââââââââââââââââââââââââââââââââââââââââââââ
+loadState();
+render();
+</script>
+</body>
+</html>
