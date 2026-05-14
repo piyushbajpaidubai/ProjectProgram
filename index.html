@@ -19,11 +19,11 @@
       background: #ffffff;
       border-radius: 10px;
       padding: 16px 28px;
-      text-align: center;
+      text-align: center;h
       margin-bottom: 12px;
     }
     .header h1 { font-size: 18px; font-weight: 700; color: #1c1c1c; letter-spacing: 0.5px; }
-    .header p  { font-size: 11px; color: #5d5d5d; margin-top: 4px; }
+    .header p  { font-size: 11px; color: #5d5d5d; margin-top: 4px; }h
 
     /* ── INFO BANNER ── */
     .info-banner {
@@ -1519,7 +1519,26 @@ function buildDiscHeader(disc, taskCount) {
                                                                                                                                   '</span></div>';
                                                                                                                                   }
 
-                                                                                                                                  function renameDisc(discId, newLabel) {
+                                                                                                                                  function renamePhase(discId, oldLabel, newLabel) {
+  newLabel = newLabel.trim();
+  if (!newLabel || newLabel === oldLabel) return;
+  tasks.forEach(t => {
+    if (t.disc === discId && t.phase === oldLabel) t.phase = newLabel;
+  });
+  render();
+  saveState && saveState();
+}
+
+function deletePhase(discId, phaseLabel) {
+  const count = tasks.filter(t => t.disc === discId && t.phase === phaseLabel).length;
+  const msg = 'Delete phase "' + phaseLabel + '" and its ' + count + ' task(s)?';
+  if (!confirm(msg)) return;
+  tasks = tasks.filter(t => !(t.disc === discId && t.phase === phaseLabel));
+  render();
+  saveState && saveState();
+}
+
+function renameDisc(discId, newLabel) {
                                                                                                                                     const disc = DISC_CONFIG.find(d => d.id === discId);
                                                                                                                                       if (!disc) return;
                                                                                                                                         const trimmed = (newLabel || '').trim();
