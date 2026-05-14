@@ -1508,13 +1508,13 @@ function buildDiscHeader(disc, taskCount) {
                                                                       function buildPhaseHeader(label, discId) {
                                                                           const safeLabel = escHtml(label);
                                                                             const safeDisc = escHtml(discId);
-                                                                              return '<div class="g-row phase-hdr" data-phase-disc="' + safeDisc + '" data-phase-label="' + safeLabel + '">' +
+                                                                              return '<div class="g-row phase-hdr" data-phase-disc="' + safeDisc + '" data-phase-label="' + label + '">' +
                                                                                   '<span class="phase-label">' +
                                                                                         '<span class="phase-label-text" contenteditable="true" ' +
                                                                                                 'onclick="event.stopPropagation()" ' +
                                                                                                         'onblur="renamePhase(\'' + safeDisc + '\', this.dataset.orig, this.innerText)" ' +
                                                                                                                 'onkeydown="blurOnEnter(event)" ' +
-                                                                                                                        'data-orig="' + safeLabel + '">' + safeLabel + '</span>' +
+                                                                                                                        'data-orig="' + label + '">' + safeLabel + '</span>' +
                                                                                                                               '<button class="phase-del-btn" onclick="deletePhase(\'' + safeDisc + '\', this.closest(\'[data-phase-label]\').dataset.phaseLabel)" title="Delete phase">\u2715</button>' +
                                                                                                                                   '</span></div>';
                                                                                                                                   }
