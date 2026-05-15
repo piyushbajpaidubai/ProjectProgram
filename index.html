@@ -14,7 +14,7 @@
       padding: 20px;
     }
 
-    /* ââ HEADER ââ */
+    /* ── HEADER ── */
     .header {
       background: #ffffff;
       border-radius: 10px;
@@ -55,7 +55,7 @@
     .header p:hover { background: #f9f9f9; }
     .header p:focus { background: #f9f9f9; box-shadow: 0 0 0 2px #e0e0e0; padding: 1px 4px; }
 
-    /* ââ INFO BANNER ââ */
+    /* ── INFO BANNER ── */
     .info-banner {
       background: linear-gradient(135deg, #323232, #606060);
       border-radius: 8px;
@@ -71,7 +71,7 @@
     .info-banner .ib-title { font-size: 12.5px; font-weight: 700; color: #ffffff; }
     .info-banner .ib-sub   { font-size: 10px; color: #dadada; margin-top: 2px; }
 
-    /* ââ CONTROLS ââ */
+    /* ── CONTROLS ── */
     .controls {
       display: flex;
       align-items: center;
@@ -129,7 +129,7 @@
     .btn-save:hover { background: #505050; }
     .btn-save.saved { background: #505050; }
 
-    /* ââ GANTT OUTER (scrollable) ââ */
+    /* ── GANTT OUTER (scrollable) ── */
     .gantt-outer {
       border-radius: 10px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.09);
@@ -155,7 +155,7 @@
       min-width: fit-content;
     }
 
-    /* ââ ROWS ââ */
+    /* ── ROWS ── */
     .g-row {
       display: flex;
       align-items: stretch;
@@ -169,7 +169,7 @@
     .g-row.phase-hdr { min-height: 0; background: #f9f9f9; border-top: 1px solid #e7e7e7; }
     .g-row.hidden { display: none; }
 
-    /* ââ DISCIPLINE BANNER ââ */
+    /* ── DISCIPLINE BANNER ── */
     .disc-banner {
       width: 100%;
       padding: 8px 14px;
@@ -195,7 +195,7 @@
       letter-spacing: 0.3px;
     }
 
-    /* â DISC HEADER EDIT/DELETE â */
+    /* — DISC HEADER EDIT/DELETE — */
     .disc-banner { position: relative;  padding-right: 40px; }
     .disc-label-text {
       display: inline;
@@ -241,7 +241,7 @@
                                                                     border-color: #ff6666 !important;
                                                                       color: #fff !important;
                                                                       }
-                                                                      /* â ADD SECTION BUTTON â */
+                                                                      /* — ADD SECTION BUTTON — */
                                                                       .add-section-row {
                                                                         display: flex;
                                                                           align-items: center;
@@ -278,7 +278,7 @@
                                                                                                                             font-weight: 400;
                                                                                                                               line-height: 1;}
 
-    /* ââ PHASE LABEL ââ */
+    /* ── PHASE LABEL ── */
     .phase-label {
       font-size: 9px;
       font-weight: 700;
@@ -295,7 +295,7 @@
     .add-phase-btn { background: transparent; border: 1px dashed rgba(255,255,255,0.5); color: rgba(255,255,255,0.7); cursor: pointer; font-size: 10px; padding: 2px 8px; border-radius: 3px; transition: all 0.2s; letter-spacing: 0.05em; text-transform: uppercase; font-family: inherit; white-space: nowrap; margin-right: 6px; }
     .add-phase-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.8); color: #fff; }
 
-    /* ââ FIXED COLUMNS ââ */
+    /* ── FIXED COLUMNS ── */
     .c-no {
       width: 54px; flex-shrink: 0;
       padding: 6px 4px 6px 10px;
@@ -348,7 +348,7 @@
     }
     .c-timeline { flex: 1; position: relative; min-width: 720px; }
 
-    /* ââ WEEK HEADERS ââ */
+    /* ── WEEK HEADERS ── */
     .week-hdrs { display: flex; }
     .week-hdr {
       flex: 1;
@@ -378,7 +378,7 @@
     }
     .week-hdr.add-col:hover { background: #262626; }
 
-    /* ââ TASK INFO ââ */
+    /* ── TASK INFO ── */
     .task-no-text {
       font-size: 9px; font-weight: 800; color: #727272;
       white-space: nowrap; outline: none; border-radius: 3px;
@@ -444,11 +444,11 @@
     }
     .del-btn:hover { color: #707070; }
 
-    /* ââ GRID LINES ââ */
+    /* ── GRID LINES ── */
     .grid-line { position: absolute; top: 0; bottom: 0; width: 1px; background: #f3f3f3; pointer-events: none; z-index: 0; }
     .grid-alt   { position: absolute; top: 0; bottom: 0; background: rgba(0,0,0,0.012); pointer-events: none; z-index: 0; }
 
-    /* ââ BAR ââ */
+    /* ── BAR ── */
     .g-bar {
       position: absolute; top: 50%; transform: translateY(-50%);
       height: 24px; border-radius: 5px;
@@ -463,7 +463,7 @@
     body.is-dragging { cursor: grabbing !important; user-select: none; }
     body.is-dragging * { cursor: grabbing !important; }
 
-    /* â ROW DRAG-TO-REORDER â */
+    /* — ROW DRAG-TO-REORDER — */
     .row-drag-handle {
       display: flex; align-items: center; justify-content: center;
       width: 14px; flex-shrink: 0;
@@ -494,11 +494,11 @@
       position: absolute; top: 0; bottom: 0; width: 9px;
       cursor: ew-resize; z-index: 2; display: flex; align-items: center; justify-content: center;
     }
-    .bar-handle::after { content: 'â®'; font-size: 9px; color: rgba(255,255,255,0.45); }
+    .bar-handle::after { content: '⋮'; font-size: 9px; color: rgba(255,255,255,0.45); }
     .bar-handle.left  { left: 0;  border-radius: 5px 0 0 5px; }
     .bar-handle.right { right: 0; border-radius: 0 5px 5px 0; }
 
-    /* ââ ADD ROW ââ */
+    /* ── ADD ROW ── */
     .add-row-btn {
       display: flex; align-items: center; gap: 5px;
       background: none; border: none; cursor: pointer;
@@ -510,7 +510,7 @@
     .add-row-btn:hover { background: #f9f9f9; color: #7b7b7b; }
     .add-row-btn .plus { font-size: 14px; color: #7b7b7b; line-height: 1; }
 
-    /* ââ MILESTONE ââ */
+    /* ── MILESTONE ── */
     /* -- MILESTONE SYMBOL ROW -- */
     .g-row.milestone-symbol-row {
       background: linear-gradient(90deg, #fafafa 0%, #fafafa 100%);
@@ -566,16 +566,16 @@
       padding: 5px 12px; font-size: 11px; font-weight: 700; color: #a7a7a7;
     }
 
-    /* ââ LEGEND ââ */
+    /* ── LEGEND ── */
     .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
     .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: #7e7e7e; }
     .legend-dot  { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
 
-    /* ââ TIP ââ */
+    /* ── TIP ── */
     .tip { font-size: 10px; color: #acacac; margin-top: 8px; padding-left: 2px; }
     .tip kbd { background: #e7e7e7; border-radius: 3px; padding: 1px 5px; font-size: 9.5px; color: #545454; }
 
-    /* ââ PRINT / PDF ââ */
+    /* ── PRINT / PDF ── */
     @media print {
       @page { size: A2 landscape; margin: 8mm; }
       body { background: white; padding: 4mm; }
@@ -613,9 +613,9 @@
     <span class="ctrl-label">Week 1 Start:</span>
     <input type="date" class="ctrl-input" id="startDateInput" onchange="onStartDateChange(this.value)"/>
   </div>
-  <button class="btn btn-blue" onclick="addWeekColumn()">ï¼ Add Week</button>
-  <button class="btn btn-success" onclick="addGlobalTask()">ï¼ Add Task</button>
-  <button class="btn btn-pdf" onclick="savePDF()">ð¨ Save PDF</button>
+  <button class="btn btn-blue" onclick="addWeekColumn()">＋ Add Week</button>
+  <button class="btn btn-success" onclick="addGlobalTask()">＋ Add Task</button>
+  <button class="btn btn-pdf" onclick="savePDF()">🖨 Save PDF</button>
   <button class="btn btn-save" id="saveBtn" onclick="saveState()" title="Save all changes to browser storage">&#626262; Save</button>
 </div>
 
@@ -628,27 +628,27 @@
 </div>
 
 <div class="tip">
-  ð¡ <kbd>Click</kbd> task name / PM / SC to edit &nbsp;Â·&nbsp;
-  <kbd>Drag</kbd> bar to move &nbsp;Â·&nbsp;
-  <kbd>Drag edges</kbd> to resize &nbsp;Â·&nbsp;
-  <kbd>â</kbd> dot to change colour &nbsp;Â·&nbsp;
-  <kbd>Status badge</kbd> to cycle status &nbsp;Â·&nbsp;
-  <kbd>â¶ Discipline header</kbd> to collapse/expand &nbsp;Â·&nbsp;
-  <kbd>ï¼ Add Week</kbd> to extend timeline
+  💡 <kbd>Click</kbd> task name / PM / SC to edit &nbsp;·&nbsp;
+  <kbd>Drag</kbd> bar to move &nbsp;·&nbsp;
+  <kbd>Drag edges</kbd> to resize &nbsp;·&nbsp;
+  <kbd>●</kbd> dot to change colour &nbsp;·&nbsp;
+  <kbd>Status badge</kbd> to cycle status &nbsp;·&nbsp;
+  <kbd>▶ Discipline header</kbd> to collapse/expand &nbsp;·&nbsp;
+  <kbd>＋ Add Week</kbd> to extend timeline
 </div>
 
 <div class="legend" id="legend"></div>
 
 <script>
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 //  CONFIGURATION
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 let numWeeks = 16;
 let weekStartDate = null;
 let activeFilter = 'all';
 
 const DISC_CONFIG = [
-  { id:'pm',  label:'LDC PROJECT MANAGEMENT â CROSS-DISCIPLINE', short:'PM Cross-Disc.', color:'#323232' },
+  { id:'pm',  label:'LDC PROJECT MANAGEMENT – CROSS-DISCIPLINE', short:'PM Cross-Disc.', color:'#323232' },
   { id:'arch', label:'ARCHITECTURE',                              short:'Architecture',   color:'#606060' },
   { id:'str', label:'STRUCTURAL DESIGN',                         short:'Structural',     color:'#4b4b4b' },
   { id:'mep', label:'MEP DESIGN',                                short:'MEP',            color:'#424242' },
@@ -680,100 +680,100 @@ let nextId = 200;
 let drag = null;
 let msDrag = null;
 
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 //  TASK DATA  (72 tasks from Excel)
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 let tasks = [
 
-  // ââ LDC PM CROSS-DISCIPLINE ââââââââââââââââââââââââââââââââââââââââââââââ
-  // PHASE 1 â MOBILISATION
-  { id:1,  disc:'pm', phase:'PHASE 1 â MOBILISATION', no:'P1.1',
+  // ── LDC PM CROSS-DISCIPLINE ──────────────────────────────────────────────
+  // PHASE 1 – MOBILISATION
+  { id:1,  disc:'pm', phase:'PHASE 1 – MOBILISATION', no:'P1.1',
     name:'Receive Client NTP; issue DD Stage commencement notice to all sub-consultants',
     sub:'Input: Client NTP',
     pm:'Project Director / PM Lead', sc:'All SCs', wStart:1, wEnd:1, status:'Not Started', color:'#323232' },
-  { id:2,  disc:'pm', phase:'PHASE 1 â MOBILISATION', no:'P1.2',
+  { id:2,  disc:'pm', phase:'PHASE 1 – MOBILISATION', no:'P1.2',
     name:'Confirm sub-consultant appointments, CVs, and insurance cover are current',
     sub:'Input: Appt letters; LOA Clause 6',
     pm:'PM Lead', sc:'All SCs', wStart:1, wEnd:1, status:'Not Started', color:'#323232' },
-  { id:3,  disc:'pm', phase:'PHASE 1 â MOBILISATION', no:'P1.3',
+  { id:3,  disc:'pm', phase:'PHASE 1 – MOBILISATION', no:'P1.3',
     name:'Issue DD Stage Brief to all sub-consultants (scope, deliverables, format, programme, BIM)',
     sub:'Input: LOA Sched. 3; DD Programme; Emaar EIR',
     pm:'PM Lead', sc:'All SCs', wStart:1, wEnd:1, status:'Not Started', color:'#323232' },
-  { id:4,  disc:'pm', phase:'PHASE 1 â MOBILISATION', no:'P1.4',
+  { id:4,  disc:'pm', phase:'PHASE 1 – MOBILISATION', no:'P1.4',
     name:'Conduct LDC DD Stage Kick-off Meeting (all disciplines, Architecture team, PM)',
     sub:'Input: DD Brief; NTP; programme',
     pm:'Project Director', sc:'All SCs + Arch', wStart:1, wEnd:1, status:'Not Started', color:'#323232' },
-  { id:5,  disc:'pm', phase:'PHASE 1 â MOBILISATION', no:'P1.5',
+  { id:5,  disc:'pm', phase:'PHASE 1 – MOBILISATION', no:'P1.5',
     name:'Establish communication protocol: CDE (BIM360/ACC), document numbering, transmittal format',
     sub:'Input: Emaar CDE guidelines; BEP',
     pm:'PM Lead + BIM Mgr', sc:'All SCs', wStart:1, wEnd:1, status:'Not Started', color:'#323232' },
 
-  // PHASE 2 â PROGRESS MONITORING
-  { id:6,  disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.1',
+  // PHASE 2 – PROGRESS MONITORING
+  { id:6,  disc:'pm', phase:'PHASE 2 – PROGRESS MONITORING (Wks 1–12)', no:'P2.1',
     name:'Conduct weekly LDC design team progress meetings (all SCs + Architecture)',
     sub:'Input: Meeting agenda; action register',
     pm:'PM Lead', sc:'All SCs + Arch', wStart:1, wEnd:12, status:'Not Started', color:'#323232' },
-  { id:7,  disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.2',
-    name:'Issue and maintain master Design Deliverables Tracker (per Sched. 3) â updated weekly',
+  { id:7,  disc:'pm', phase:'PHASE 2 – PROGRESS MONITORING (Wks 1–12)', no:'P2.2',
+    name:'Issue and maintain master Design Deliverables Tracker (per Sched. 3) — updated weekly',
     sub:'Input: LOA Sched. 3; progress from each SC',
     pm:'PM Lead', sc:'All SCs + Arch', wStart:1, wEnd:12, status:'Not Started', color:'#323232' },
-  { id:8,  disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.3',
-    name:'Prepare and issue monthly LDC Progress Report to Emaar (per Sched. 3 Â§1.12)',
+  { id:8,  disc:'pm', phase:'PHASE 2 – PROGRESS MONITORING (Wks 1–12)', no:'P2.3',
+    name:'Prepare and issue monthly LDC Progress Report to Emaar (per Sched. 3 §1.12)',
     sub:'Input: Weekly minutes; deliverables tracker; programme',
     pm:'PM Lead / Proj Director', sc:'Emaar / Client', wStart:4, wEnd:12, status:'Not Started', color:'#323232' },
-  { id:9,  disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.4',
+  { id:9,  disc:'pm', phase:'PHASE 2 – PROGRESS MONITORING (Wks 1–12)', no:'P2.4',
     name:'Manage RFI / Design Query register across all disciplines (issue, track, close out)',
     sub:'Input: Design queries from Arch & SCs',
     pm:'PM Lead', sc:'All SCs + Arch', wStart:1, wEnd:12, status:'Not Started', color:'#323232' },
-  { id:10, disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.5',
-    name:'Maintain master NOC Tracker â track all required authority NOC submissions and status',
+  { id:10, disc:'pm', phase:'PHASE 2 – PROGRESS MONITORING (Wks 1–12)', no:'P2.5',
+    name:'Maintain master NOC Tracker — track all required authority NOC submissions and status',
     sub:'Input: DM/DCD/DEWA/RTA requirements',
-    pm:'PM Lead + Proj Arch', sc:'â', wStart:1, wEnd:14, status:'Not Started', color:'#323232' },
-  { id:11, disc:'pm', phase:'PHASE 2 â PROGRESS MONITORING (Wks 1â12)', no:'P2.6',
-    name:'Coordinate with Cost Consultant â ensure all disciplines providing BOQ inputs on schedule',
+    pm:'PM Lead + Proj Arch', sc:'—', wStart:1, wEnd:14, status:'Not Started', color:'#323232' },
+  { id:11, disc:'pm', phase:'PHASE 2 – PROGRESS MONITORING (Wks 1–12)', no:'P2.6',
+    name:'Coordinate with Cost Consultant — ensure all disciplines providing BOQ inputs on schedule',
     sub:'Input: Cost Consultant programme; DD drawings',
     pm:'PM Lead', sc:'Cost Consultant + SCs', wStart:6, wEnd:12, status:'Not Started', color:'#323232' },
 
-  // PHASE 3 â CONSOLIDATED REVIEW
-  { id:12, disc:'pm', phase:'PHASE 3 â CONSOLIDATED REVIEW & QA GATE (Wks 10â13)', no:'P3.1',
+  // PHASE 3 – CONSOLIDATED REVIEW
+  { id:12, disc:'pm', phase:'PHASE 3 – CONSOLIDATED REVIEW & QA GATE (Wks 10–13)', no:'P3.1',
     name:'Receive final draft submissions from all sub-consultants and Architecture team',
     sub:'Input: Completed deliverables from all disciplines',
     pm:'PM Lead', sc:'All SCs + Arch', wStart:10, wEnd:12, status:'Not Started', color:'#323232' },
-  { id:13, disc:'pm', phase:'PHASE 3 â CONSOLIDATED REVIEW & QA GATE (Wks 10â13)', no:'P3.2',
+  { id:13, disc:'pm', phase:'PHASE 3 – CONSOLIDATED REVIEW & QA GATE (Wks 10–13)', no:'P3.2',
     name:'Conduct multi-discipline cross-check: verify all contractual deliverables per LOA Sched. 3',
     sub:'Input: LOA Sched. 3; draft submission package',
-    pm:'PM Lead + Proj Director', sc:'â', wStart:11, wEnd:12, status:'Not Started', color:'#323232' },
-  { id:14, disc:'pm', phase:'PHASE 3 â CONSOLIDATED REVIEW & QA GATE (Wks 10â13)', no:'P3.3',
-    name:'Carry out QAQC Checklist review (all sections AâH) â coordinate with Architecture and BIM team',
+    pm:'PM Lead + Proj Director', sc:'—', wStart:11, wEnd:12, status:'Not Started', color:'#323232' },
+  { id:14, disc:'pm', phase:'PHASE 3 – CONSOLIDATED REVIEW & QA GATE (Wks 10–13)', no:'P3.3',
+    name:'Carry out QAQC Checklist review (all sections A–H) — coordinate with Architecture and BIM team',
     sub:'Input: QAQC Checklist; all draft packages',
-    pm:'PM Lead + Proj Arch + BIM Mgr', sc:'â', wStart:11, wEnd:13, status:'Not Started', color:'#323232' },
-  { id:15, disc:'pm', phase:'PHASE 3 â CONSOLIDATED REVIEW & QA GATE (Wks 10â13)', no:'P3.4',
+    pm:'PM Lead + Proj Arch + BIM Mgr', sc:'—', wStart:11, wEnd:13, status:'Not Started', color:'#323232' },
+  { id:15, disc:'pm', phase:'PHASE 3 – CONSOLIDATED REVIEW & QA GATE (Wks 10–13)', no:'P3.4',
     name:'Issue consolidated review comments to each sub-consultant and Architecture; manage responses',
     sub:'Input: QAQC review results; PM cross-check comments',
     pm:'PM Lead', sc:'All SCs + Arch', wStart:11, wEnd:12, status:'Not Started', color:'#323232' },
-  { id:16, disc:'pm', phase:'PHASE 3 â CONSOLIDATED REVIEW & QA GATE (Wks 10â13)', no:'P3.5',
+  { id:16, disc:'pm', phase:'PHASE 3 – CONSOLIDATED REVIEW & QA GATE (Wks 10–13)', no:'P3.5',
     name:'Receive revised final submission packages from all disciplines after comment resolution',
     sub:'Input: Consolidated review comments; revised packages',
     pm:'PM Lead', sc:'All SCs + Arch', wStart:12, wEnd:13, status:'Not Started', color:'#323232' },
 
-  // PHASE 4 â CONSOLIDATED SUBMISSION
-  { id:17, disc:'pm', phase:'PHASE 4 â CONSOLIDATED SUBMISSION (Wks 13â14)', no:'P4.1',
+  // PHASE 4 – CONSOLIDATED SUBMISSION
+  { id:17, disc:'pm', phase:'PHASE 4 – CONSOLIDATED SUBMISSION (Wks 13–14)', no:'P4.1',
     name:'Compile full LDC Consolidated DD submission package (all disciplines; authority + Client format)',
     sub:'Input: Final packages + QAQC checklist + NOC Tracker',
-    pm:'PM Lead + Proj Director', sc:'â', wStart:13, wEnd:13, status:'Not Started', color:'#323232' },
-  { id:18, disc:'pm', phase:'PHASE 4 â CONSOLIDATED SUBMISSION (Wks 13â14)', no:'P4.2',
+    pm:'PM Lead + Proj Director', sc:'—', wStart:13, wEnd:13, status:'Not Started', color:'#323232' },
+  { id:18, disc:'pm', phase:'PHASE 4 – CONSOLIDATED SUBMISSION (Wks 13–14)', no:'P4.2',
     name:'Prepare and issue Transmittal / Covering Letter to Emaar (per LOA format requirements)',
     sub:'Input: Compiled submission package',
     pm:'PM Lead / Proj Director', sc:'Emaar / Client', wStart:13, wEnd:13, status:'Not Started', color:'#323232' },
-  { id:19, disc:'pm', phase:'PHASE 4 â CONSOLIDATED SUBMISSION (Wks 13â14)', no:'P4.3',
-    name:'Submit Consolidated DD Package to Client (Emaar Design, EFM, ECM â per Sched. 3 Â§1.2)',
+  { id:19, disc:'pm', phase:'PHASE 4 – CONSOLIDATED SUBMISSION (Wks 13–14)', no:'P4.3',
+    name:'Submit Consolidated DD Package to Client (Emaar Design, EFM, ECM — per Sched. 3 §1.2)',
     sub:'Input: Transmittal; full submission package',
     pm:'Project Director', sc:'Emaar / Client', wStart:13, wEnd:14, status:'Not Started', color:'#323232' },
-  { id:20, disc:'pm', phase:'PHASE 4 â CONSOLIDATED SUBMISSION (Wks 13â14)', no:'P4.4',
+  { id:20, disc:'pm', phase:'PHASE 4 – CONSOLIDATED SUBMISSION (Wks 13–14)', no:'P4.4',
     name:'Receive Client review comments; log and distribute to relevant disciplines',
-    sub:'Input: Client (Emaar) review comments (Sched. 3 Â§1.4)',
+    sub:'Input: Client (Emaar) review comments (Sched. 3 §1.4)',
     pm:'PM Lead', sc:'All SCs + Arch', wStart:14, wEnd:14, status:'Not Started', color:'#323232' },
-  { id:21, disc:'pm', phase:'PHASE 4 â CONSOLIDATED SUBMISSION (Wks 13â14)', no:'P4.5',
+  { id:21, disc:'pm', phase:'PHASE 4 – CONSOLIDATED SUBMISSION (Wks 13–14)', no:'P4.5',
     name:'Monitor payment milestone: confirm Employer approval triggers 20% + 80% DD fee invoices',
     sub:'Input: Employer approval; LOA payment schedule',
     pm:'Proj Director / Finance', sc:'Emaar / Client', wStart:14, wEnd:14, status:'Not Started', color:'#323232' },
@@ -950,140 +950,140 @@ let tasks = [
     sub:'',
     pm:'', sc:'', wStart:1, wEnd:14, status:'Not Started', color:'#606060' },
 
-  // ââ STRUCTURAL DESIGN ââââââââââââââââââââââââââââââââââââââââââââââââââââ
-  { id:22, disc:'str', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'S1.1',
+  // ── STRUCTURAL DESIGN ────────────────────────────────────────────────────
+  { id:22, disc:'str', phase:'PHASE 1 – BRIEF & KICK-OFF', no:'S1.1',
     name:'Issue DD Stage Structural Brief (scope, codes, deliverables per LOA Sched. 3)',
     sub:'Input: LOA Sched. 3; Arch DD plans (SD); DM structural code',
     pm:'PM Lead', sc:'Structural SC', wStart:1, wEnd:1, status:'Not Started', color:'#4b4b4b' },
-  { id:23, disc:'str', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'S1.2',
+  { id:23, disc:'str', phase:'PHASE 1 – BRIEF & KICK-OFF', no:'S1.2',
     name:'Confirm Structural SC programme for DD stage (14-week); flag risks to overall programme',
     sub:'Input: Structural SC DD programme draft',
     pm:'PM Lead', sc:'Structural SC', wStart:1, wEnd:1, status:'Not Started', color:'#4b4b4b' },
-  { id:24, disc:'str', phase:'PHASE 2 â PROGRESS MONITORING', no:'S2.1',
+  { id:24, disc:'str', phase:'PHASE 2 – PROGRESS MONITORING', no:'S2.1',
     name:'Monitor Structural SC progress in weekly design meetings; escalate delays to Project Director',
     sub:'Input: Weekly meeting agenda; Structural progress report',
     pm:'PM Lead', sc:'Structural SC', wStart:1, wEnd:10, status:'Not Started', color:'#4b4b4b' },
-  { id:25, disc:'str', phase:'PHASE 2 â PROGRESS MONITORING', no:'S2.2',
+  { id:25, disc:'str', phase:'PHASE 2 – PROGRESS MONITORING', no:'S2.2',
     name:'Issue Architecture BIM updates to Structural SC; manage slab opening / penetration RFIs',
     sub:'Input: Updated Architecture BIM; Structural RFIs',
     pm:'PM Lead + BIM Mgr', sc:'Structural SC', wStart:1, wEnd:10, status:'Not Started', color:'#4b4b4b' },
-  { id:26, disc:'str', phase:'PHASE 2 â PROGRESS MONITORING', no:'S2.3',
+  { id:26, disc:'str', phase:'PHASE 2 – PROGRESS MONITORING', no:'S2.3',
     name:'Review Structural intermediate draft drawings for completeness and consistency with Architecture',
     sub:'Input: Structural draft drawing package (interim)',
     pm:'PM Lead + Proj Arch', sc:'Structural SC', wStart:5, wEnd:9, status:'Not Started', color:'#4b4b4b' },
-  { id:27, disc:'str', phase:'PHASE 3 â SUBMISSION REVIEW', no:'S3.1',
+  { id:27, disc:'str', phase:'PHASE 3 – SUBMISSION REVIEW', no:'S3.1',
     name:'Receive final Structural DD package; verify against LOA Sched. 3 deliverables checklist',
     sub:'Input: Structural SC final DD package (calcs + drawings)',
     pm:'PM Lead', sc:'Structural SC', wStart:10, wEnd:11, status:'Not Started', color:'#4b4b4b' },
-  { id:28, disc:'str', phase:'PHASE 3 â SUBMISSION REVIEW', no:'S3.2',
+  { id:28, disc:'str', phase:'PHASE 3 – SUBMISSION REVIEW', no:'S3.2',
     name:'Review and complete QAQC Checklist Section C (Structural) and Section G (BIM/Clash)',
     sub:'Input: Structural DD package; QAQC Checklist',
     pm:'PM Lead + BIM Mgr', sc:'Structural SC', wStart:11, wEnd:12, status:'Not Started', color:'#4b4b4b' },
-  { id:29, disc:'str', phase:'PHASE 3 â SUBMISSION REVIEW', no:'S3.3',
+  { id:29, disc:'str', phase:'PHASE 3 – SUBMISSION REVIEW', no:'S3.3',
     name:'Issue Structural review comments to SC; receive and verify revised package',
     sub:'Input: Review comments log',
     pm:'PM Lead', sc:'Structural SC', wStart:12, wEnd:13, status:'Not Started', color:'#4b4b4b' },
 
-  // ââ MEP DESIGN âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-  { id:30, disc:'mep', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'M1.1',
+  // ── MEP DESIGN ───────────────────────────────────────────────────────────
+  { id:30, disc:'mep', phase:'PHASE 1 – BRIEF & KICK-OFF', no:'M1.1',
     name:'Issue DD Stage MEP Brief (scope, Emaar MEP checklists, DEWA requirements, calcs format)',
     sub:'Input: LOA Sched. 3; Emaar MEP Checklists; DEWA NOC requirements',
     pm:'PM Lead', sc:'MEP SC', wStart:1, wEnd:1, status:'Not Started', color:'#424242' },
-  { id:31, disc:'mep', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'M1.2',
+  { id:31, disc:'mep', phase:'PHASE 1 – BRIEF & KICK-OFF', no:'M1.2',
     name:'Confirm MEP SC programme; highlight DEWA load schedule and DCD coordination criticalities',
     sub:'Input: MEP SC DD programme; DEWA/DCD submission timelines',
     pm:'PM Lead', sc:'MEP SC', wStart:1, wEnd:1, status:'Not Started', color:'#424242' },
-  { id:32, disc:'mep', phase:'PHASE 2 â PROGRESS MONITORING', no:'M2.1',
+  { id:32, disc:'mep', phase:'PHASE 2 – PROGRESS MONITORING', no:'M2.1',
     name:'Monitor MEP SC progress in weekly meetings; track Emaar MEP design checklists completion',
     sub:'Input: Weekly progress; Emaar MEP checklists status',
     pm:'PM Lead', sc:'MEP SC', wStart:1, wEnd:10, status:'Not Started', color:'#424242' },
-  { id:33, disc:'mep', phase:'PHASE 2 â PROGRESS MONITORING', no:'M2.2',
+  { id:33, disc:'mep', phase:'PHASE 2 – PROGRESS MONITORING', no:'M2.2',
     name:'Coordinate Architecture BOH/MEP plant room layouts with MEP SC; issue Architecture BIM updates',
     sub:'Input: Architecture BIM revisions; MEP plant room requirements',
     pm:'PM Lead + Proj Arch + BIM Mgr', sc:'MEP SC', wStart:2, wEnd:10, status:'Not Started', color:'#424242' },
-  { id:34, disc:'mep', phase:'PHASE 2 â PROGRESS MONITORING', no:'M2.3',
+  { id:34, disc:'mep', phase:'PHASE 2 – PROGRESS MONITORING', no:'M2.3',
     name:'Review MEP intermediate draft calculations and drawings; confirm DEWA load schedule progress',
     sub:'Input: MEP draft calculations / drawings (interim)',
     pm:'PM Lead', sc:'MEP SC', wStart:5, wEnd:9, status:'Not Started', color:'#424242' },
-  { id:35, disc:'mep', phase:'PHASE 3 â SUBMISSION REVIEW', no:'M3.1',
+  { id:35, disc:'mep', phase:'PHASE 3 – SUBMISSION REVIEW', no:'M3.1',
     name:'Receive final MEP DD package; verify against LOA Sched. 3 + Emaar MEP checklists',
     sub:'Input: MEP SC final DD package; LOA Sched. 3; Emaar MEP checklists',
     pm:'PM Lead', sc:'MEP SC', wStart:10, wEnd:11, status:'Not Started', color:'#424242' },
-  { id:36, disc:'mep', phase:'PHASE 3 â SUBMISSION REVIEW', no:'M3.2',
+  { id:36, disc:'mep', phase:'PHASE 3 – SUBMISSION REVIEW', no:'M3.2',
     name:'Complete QAQC Checklist Sections D (MEP), E3 (pressurisation/FLS), G (BIM), H (NOC: DEWA, DCD)',
     sub:'Input: MEP DD package; QAQC Checklist',
     pm:'PM Lead + BIM Mgr', sc:'MEP SC', wStart:11, wEnd:12, status:'Not Started', color:'#424242' },
-  { id:37, disc:'mep', phase:'PHASE 3 â SUBMISSION REVIEW', no:'M3.3',
+  { id:37, disc:'mep', phase:'PHASE 3 – SUBMISSION REVIEW', no:'M3.3',
     name:'Issue MEP review comments; receive revised package; confirm DEWA NOC package readiness',
     sub:'Input: MEP review comments log',
     pm:'PM Lead', sc:'MEP SC', wStart:12, wEnd:13, status:'Not Started', color:'#424242' },
 
-  // ââ INTERIOR DESIGN ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-  { id:38, disc:'id', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'I1.1',
-    name:'Issue DD Stage ID Brief; confirm Emaar ID material set (LOA Sched. 1 â Repeatability Matrix)',
+  // ── INTERIOR DESIGN ──────────────────────────────────────────────────────
+  { id:38, disc:'id', phase:'PHASE 1 – BRIEF & KICK-OFF', no:'I1.1',
+    name:'Issue DD Stage ID Brief; confirm Emaar ID material set (LOA Sched. 1 – Repeatability Matrix)',
     sub:'Input: LOA Sched. 3; Emaar ID finishes; SD ID package',
     pm:'PM Lead', sc:'ID SC + Emaar ID', wStart:1, wEnd:1, status:'Not Started', color:'#4e4e4e' },
-  { id:39, disc:'id', phase:'PHASE 2 â PROGRESS MONITORING', no:'I2.1',
+  { id:39, disc:'id', phase:'PHASE 2 – PROGRESS MONITORING', no:'I2.1',
     name:'Monitor ID SC progress; ensure FOH/BOH interface coordinated with Architecture team',
     sub:'Input: Weekly progress; Architecture DD plans',
     pm:'PM Lead', sc:'ID SC', wStart:1, wEnd:10, status:'Not Started', color:'#4e4e4e' },
-  { id:40, disc:'id', phase:'PHASE 2 â PROGRESS MONITORING', no:'I2.2',
+  { id:40, disc:'id', phase:'PHASE 2 – PROGRESS MONITORING', no:'I2.2',
     name:'Coordinate Apartment Mockup documentation: confirm scope and submission with Client',
     sub:'Input: SD ID mockup approval; Client confirmation of mockup unit',
     pm:'PM Lead', sc:'ID SC + Client', wStart:4, wEnd:10, status:'Not Started', color:'#4e4e4e' },
-  { id:41, disc:'id', phase:'PHASE 3 â SUBMISSION REVIEW', no:'I3.1',
+  { id:41, disc:'id', phase:'PHASE 3 – SUBMISSION REVIEW', no:'I3.1',
     name:'Receive final ID DD package; verify all specs (finishes, lighting, white goods, sanitary, FF&E, joinery)',
     sub:'Input: ID SC final DD package; LOA Sched. 3 checklist',
     pm:'PM Lead', sc:'ID SC', wStart:10, wEnd:12, status:'Not Started', color:'#4e4e4e' },
-  { id:42, disc:'id', phase:'PHASE 3 â SUBMISSION REVIEW', no:'I3.2',
+  { id:42, disc:'id', phase:'PHASE 3 – SUBMISSION REVIEW', no:'I3.2',
     name:'Issue ID review comments; receive revised package',
     sub:'Input: ID review comments log',
     pm:'PM Lead', sc:'ID SC', wStart:12, wEnd:13, status:'Not Started', color:'#4e4e4e' },
 
-  // ââ LANDSCAPE & HARDSCAPE ââââââââââââââââââââââââââââââââââââââââââââââââ
-  { id:43, disc:'lnd', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'L1.1',
+  // ── LANDSCAPE & HARDSCAPE ────────────────────────────────────────────────
+  { id:43, disc:'lnd', phase:'PHASE 1 – BRIEF & KICK-OFF', no:'L1.1',
     name:'Issue Landscape DD Brief; confirm podium interface with Architecture and RC structure',
     sub:'Input: LOA Sched. 3; SD Landscape; Arch podium DD plans',
     pm:'PM Lead', sc:'Landscape SC', wStart:1, wEnd:1, status:'Not Started', color:'#505050' },
-  { id:44, disc:'lnd', phase:'PHASE 2 â PROGRESS MONITORING', no:'L2.1',
+  { id:44, disc:'lnd', phase:'PHASE 2 – PROGRESS MONITORING', no:'L2.1',
     name:'Monitor Landscape SC progress; coordinate podium-level architecture / landscape slab interface',
     sub:'Input: Weekly progress; Architecture podium DD drawings',
     pm:'PM Lead', sc:'Landscape SC', wStart:1, wEnd:10, status:'Not Started', color:'#505050' },
-  { id:45, disc:'lnd', phase:'PHASE 2 â PROGRESS MONITORING', no:'L2.2',
+  { id:45, disc:'lnd', phase:'PHASE 2 – PROGRESS MONITORING', no:'L2.2',
     name:'Coordinate external services (manholes, irrigation, drainage) with MEP SC and Infrastructure SC',
     sub:'Input: MEP external drainage; Infrastructure SC drawings',
     pm:'PM Lead', sc:'Landscape + MEP + Infra', wStart:5, wEnd:10, status:'Not Started', color:'#505050' },
-  { id:46, disc:'lnd', phase:'PHASE 3 â SUBMISSION REVIEW', no:'L3.1',
+  { id:46, disc:'lnd', phase:'PHASE 3 – SUBMISSION REVIEW', no:'L3.1',
     name:'Receive final Landscape DD package; verify all schedules (hard, soft, lighting) and material boards',
     sub:'Input: Landscape SC final DD package; LOA checklist',
     pm:'PM Lead', sc:'Landscape SC', wStart:10, wEnd:12, status:'Not Started', color:'#505050' },
-  { id:47, disc:'lnd', phase:'PHASE 3 â SUBMISSION REVIEW', no:'L3.2',
+  { id:47, disc:'lnd', phase:'PHASE 3 – SUBMISSION REVIEW', no:'L3.2',
     name:'Issue Landscape review comments; receive revised package; confirm material board submission',
     sub:'Input: Landscape review comments log',
     pm:'PM Lead', sc:'Landscape SC', wStart:12, wEnd:13, status:'Not Started', color:'#505050' },
 
-  // ââ COST MANAGEMENT & QS âââââââââââââââââââââââââââââââââââââââââââââââââ
-  { id:69, disc:'qs', phase:'PHASE 1 â BRIEF & KICK-OFF', no:'QS1.1',
+  // ── COST MANAGEMENT & QS ─────────────────────────────────────────────────
+  { id:69, disc:'qs', phase:'PHASE 1 – BRIEF & KICK-OFF', no:'QS1.1',
     name:'Issue Cost Consultant DD Brief; confirm BOQ format, elemental breakdown, and Pre-Tender Estimate template',
     sub:'Input: LOA Sched. 3; SD Pre-Tender Estimate; Emaar BOQ format',
     pm:'PM Lead', sc:'Cost Consultant SC', wStart:1, wEnd:1, status:'Not Started', color:'#363636' },
-  { id:70, disc:'qs', phase:'PHASE 2 â PROGRESS MONITORING', no:'QS2.1',
+  { id:70, disc:'qs', phase:'PHASE 2 – PROGRESS MONITORING', no:'QS2.1',
     name:'Coordinate all discipline DD drawings with Cost Consultant for BOQ preparation; track SC inputs',
-    sub:'Input: DD drawings from all disciplines (Arch, Structure, MEP, ID, Landscape, FaÃ§ade)',
+    sub:'Input: DD drawings from all disciplines (Arch, Structure, MEP, ID, Landscape, Façade)',
     pm:'PM Lead', sc:'Cost Consultant + all SCs', wStart:6, wEnd:11, status:'Not Started', color:'#363636' },
-  { id:71, disc:'qs', phase:'PHASE 2 â PROGRESS MONITORING', no:'QS2.2',
-    name:'Monitor Pre-Tender Estimate progress; verify design remains within approved Client Budget (Sched. 3 Â§1.10)',
+  { id:71, disc:'qs', phase:'PHASE 2 – PROGRESS MONITORING', no:'QS2.2',
+    name:'Monitor Pre-Tender Estimate progress; verify design remains within approved Client Budget (Sched. 3 §1.10)',
     sub:'Input: Pre-Tender Estimate draft; Client approved Budget',
     pm:'PM Lead + Proj Director', sc:'Cost Consultant SC', wStart:8, wEnd:12, status:'Not Started', color:'#363636' },
-  { id:72, disc:'qs', phase:'PHASE 3 â SUBMISSION REVIEW', no:'QS3.1',
+  { id:72, disc:'qs', phase:'PHASE 3 – SUBMISSION REVIEW', no:'QS3.1',
     name:'Receive final BOQ and Pre-Tender Estimate; verify completeness and alignment with Client-approved Budget',
     sub:'Input: QS final BOQ + Pre-Tender Estimate; LOA checklist; Client Budget',
     pm:'PM Lead + Proj Director', sc:'Cost Consultant SC', wStart:11, wEnd:13, status:'Not Started', color:'#363636' },
 ];
 
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 //  HELPERS
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 function escHtml(s) {
   return String(s||'')
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -1103,9 +1103,9 @@ function statusStyle(s) {
   return `background:${st.bg};color:${st.color};`;
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 //  FILTER TABS
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 function buildFilterTabs() {
   const tabs = document.getElementById('filterTabs');
   let html = `<button class="filter-tab${activeFilter==='all'?' active':''}" onclick="setFilter('all')">All Disciplines</button>`;
@@ -1119,9 +1119,9 @@ function buildFilterTabs() {
 }
 function setFilter(id) { activeFilter = id; render(); }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 //  RENDER
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 function initHeaderScrollSync() {
   const scrollEl = document.getElementById('gantt-scroll');
   const headerEl = document.getElementById('gantt-header');
@@ -1138,7 +1138,7 @@ function buildHeaderRow() {
     const lbl = weekLabel(i);
     weekCells += `<div class="week-hdr"><span class="wn">Wk ${i}</span>${lbl?`<span class="wd">${lbl}</span>`:''}</div>`;
   }
-  weekCells += `<div class="week-hdr add-col" title="Add week column" onclick="addWeekColumn()">ï¼</div>`;
+  weekCells += `<div class="week-hdr add-col" title="Add week column" onclick="addWeekColumn()">＋</div>`;
   return `
   <div class="g-row hdr">
     <div class="c-no hdr-cell">No.</div>
@@ -1277,7 +1277,7 @@ function buildDiscHeader(disc, taskCount) {
       <div class="g-row disc-hdr" data-disc="${disc.id}">
           <div class="disc-banner${isCollapsed ? ' collapsed':''}" style="background:${disc.color}"
                 onclick="toggleDisc('${disc.id}')">
-                      <span class="disc-arrow">â¼</span>
+                      <span class="disc-arrow">▼</span>
                             <span class="disc-label-text" contenteditable="true"
                                     onclick="event.stopPropagation()"
                                             onblur="renameDisc('${disc.id}', this.innerText)"
@@ -1285,7 +1285,7 @@ function buildDiscHeader(disc, taskCount) {
                                                           <span class="disc-count">${taskCount} tasks</span>
                                                                 
                                                                 <button class="add-phase-btn" onclick="event.stopPropagation();addPhase('${disc.id}')" title="Add new phase">+ Add Phase</button>
-<button class="hdr-del-btn" onclick="event.stopPropagation();deleteDisc('${disc.id}')" title="Delete section">â</button>
+<button class="hdr-del-btn" onclick="event.stopPropagation();deleteDisc('${disc.id}')" title="Delete section">✕</button>
                                                                     </div>
                                                                       </div>`;
                                                                       }
@@ -1334,13 +1334,14 @@ function addPhase(discId) {
   if (existingPhases.includes(trimmed)) { alert('Phase "' + trimmed + '" already exists.'); return; }
   const disc = DISC_MAP[discId];
   const id = nextId++;
+  const sample = discTasks.find(t => t.no && /^[A-Z]+/.test(t.no));
+  const prefix = sample ? sample.no.match(/^[A-Z]+/)[0] : discId.slice(0,1).toUpperCase();
   tasks.push({ id, disc: discId, type: 'task', phase: trimmed,
-    no: '', name: 'New task', sub: '', pm: '', sc: '', status: 'Not Started',
+    no: prefix + nextNum + '.1', name: 'New Task', sub: '', pm: '', sc: '', status: 'Not Started',
     color: disc ? disc.color : '#888', wk: null, span: 1 });
   render();
   saveState && saveState();
 }
-
 function renameDisc(discId, newLabel) {
                                                                                                                                     const disc = DISC_CONFIG.find(d => d.id === discId);
                                                                                                                                       if (!disc) return;
@@ -1428,20 +1429,20 @@ function render() {
   // Milestone footer
   html += `
   <div class="milestone-row">
-    <div class="m-icon">ð</div>
+    <div class="m-icon">🏆</div>
     <div>
-      <div class="m-title">LDC DD Stage Consolidated Submission â All Disciplines</div>
-      <div class="m-sub">All sub-consultant packages received, reviewed &amp; QA-gated Â· QAQC Checklist signed Â· Consolidated submission to Emaar</div>
+      <div class="m-title">LDC DD Stage Consolidated Submission — All Disciplines</div>
+      <div class="m-sub">All sub-consultant packages received, reviewed &amp; QA-gated · QAQC Checklist signed · Consolidated submission to Emaar</div>
     </div>
-    <div class="m-date">Wk 13â14</div>
+    <div class="m-date">Wk 13–14</div>
   </div>
   <div class="milestone-row" style="background:linear-gradient(135deg,#535353,#7e7e7e)">
-    <div class="m-icon">ð</div>
+    <div class="m-icon">🏛</div>
     <div>
-      <div class="m-title">AOR â Building Permit Obtained from DDA</div>
-      <div class="m-sub">All authority NOCs received Â· DDA Permit Approval Â· Full Building Permit issued (Est. 02-Sep-26)</div>
+      <div class="m-title">AOR — Building Permit Obtained from DDA</div>
+      <div class="m-sub">All authority NOCs received · DDA Permit Approval · Full Building Permit issued (Est. 02-Sep-26)</div>
     </div>
-    <div class="m-date">Wk 15â16</div>
+    <div class="m-date">Wk 15–16</div>
   </div>`;
 
   gantt.innerHTML = html;
@@ -1466,9 +1467,9 @@ function renderLegend() {
     </div>`;
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 //  DRAG & RESIZE
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 function startDrag(e, taskId, type) {
   e.preventDefault();
   e.stopPropagation();
@@ -1519,7 +1520,7 @@ document.addEventListener('mousemove', e => {
   const widthPct = pct(ne - ns + 1);
   barEl.style.left  = `calc(${leftPct}% + 3px)`;
   barEl.style.width = `calc(${widthPct}% - 6px)`;
-  barEl.title = `Wk ${ns}â${ne}`;
+  barEl.title = `Wk ${ns}–${ne}`;
 });
 
 document.addEventListener('mouseup', () => {
@@ -1564,9 +1565,9 @@ document.addEventListener('mouseup', function() {
   document.body.classList.remove('is-dragging');
 });
 
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 //  TASK ACTIONS
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 function deleteTask(id) {
   if (!confirm('Delete this task?')) return;
   tasks = tasks.filter(t => t.id !== id);
@@ -1580,8 +1581,8 @@ function addTaskToDisc(discId) {
   const id = nextId++;
   tasks.push({ id, disc: discId, type: 'task', phase: lastPhase,
     no: discId.toUpperCase() + '-' + id,
-    name: 'New Task â click to edit', sub: 'Input: click to edit',
-    pm: 'PM Lead', sc: 'â', wStart: 1, wEnd: 2,
+    name: 'New Task – click to edit', sub: 'Input: click to edit',
+    pm: 'PM Lead', sc: '–', wStart: 1, wEnd: 2,
     status: 'Not Started', color: disc.color });
   render();
   setTimeout(() => {
@@ -1597,7 +1598,7 @@ function addMilestoneToDisc(discId) {
   const id = nextId++;
   tasks.push({ id, disc: discId, type: 'milestone', phase: lastPhase,
     no: 'MS-' + id,
-    name: 'Milestone â click to edit', sub: 'Description â click to edit',
+    name: 'Milestone – click to edit', sub: 'Description – click to edit',
     pm: '', sc: '', wStart: 1, wEnd: 1, status: 'Not Started', color: '#878787',
     markers: [{ week: 1, label: 'MS-' + id }] });
   render();
@@ -1659,9 +1660,9 @@ function saveField(id, field, value) {
   if (task) task[field] = value.trim() || task[field];
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 //  WEEK COLUMNS
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 function addWeekColumn() {
   numWeeks++;
   render();
@@ -1675,18 +1676,18 @@ function onStartDateChange(val) {
   render();
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 //  PDF / PRINT
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 function savePDF() {
   window.print();
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ────────────────────────────────────────
 //  ROW DRAG-TO-REORDER (syncs tasks[] so Save preserves row order)
-// ââââââââââââââââââââââââââââââââââââââââ
+// ────────────────────────────────────────
 (function(){
   let dragSrcRow = null, ghost = null;
   function getTaskRows() {
@@ -1776,7 +1777,7 @@ function savePDF() {
 })();
 
 //  SAVE / LOAD (localStorage)
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 const LS_KEY = 'sw11_tracker_v1';
 
 function saveState() {
@@ -1819,11 +1820,11 @@ function loadState() {
 }
 
 //  INIT
-// âââââââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════════
 loadState();
 render();
 
-// ââ LOGO UPLOAD ââ
+// ── LOGO UPLOAD ──
 function handleLogoUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
