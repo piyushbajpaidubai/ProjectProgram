@@ -15,15 +15,46 @@
     }
 
     /* ── HEADER ── */
+    /* ── HEADER ── */
     .header {
       background: #ffffff;
       border-radius: 10px;
-      padding: 16px 28px;
-      text-align: center;h
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
       margin-bottom: 12px;
     }
-    .header h1 { font-size: 18px; font-weight: 700; color: #1c1c1c; letter-spacing: 0.5px; }
-    .header p  { font-size: 11px; color: #5d5d5d; margin-top: 4px; }h
+    .header-logo-wrap {
+      flex-shrink: 0;
+      width: 90px;
+      height: 60px;
+      border: 2px dashed #c8c8c8;
+      border-radius: 7px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      background: #fafafa;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .header-logo-wrap:hover { border-color: #888; background: #f3f3f3; }
+    .header-logo-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 5px; }
+    .header-logo-wrap .logo-placeholder-text { font-size: 9px; color: #aaa; text-align: center; pointer-events: none; line-height: 1.3; padding: 2px 4px; }
+    .header-logo-wrap .logo-placeholder-icon { font-size: 18px; color: #ccc; pointer-events: none; margin-bottom: 2px; }
+    .header-logo-wrap input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .logo-remove-btn { display: none; position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.45); color: #fff; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 9px; cursor: pointer; align-items: center; justify-content: center; line-height: 1; padding: 0; z-index: 5; }
+    .header-logo-wrap:hover .logo-remove-btn { display: flex; }
+    .header-text { flex: 1; text-align: center; }
+    .header h1 { font-size: 17px; font-weight: 700; color: #1c1c1c; letter-spacing: 0.4px; outline: none; border-radius: 3px; display: block; width: 100%; cursor: text; }
+    .header h1:hover { background: #f5f5f5; }
+    .header h1:focus { background: #f5f5f5; box-shadow: 0 0 0 2px #d0d0d0; padding: 1px 6px; }
+    .header p { font-size: 11px; color: #5d5d5d; margin-top: 4px; outline: none; border-radius: 3px; display: block; width: 100%; cursor: text; }
+    .header p:hover { background: #f9f9f9; }
+    .header p:focus { background: #f9f9f9; box-shadow: 0 0 0 2px #e0e0e0; padding: 1px 4px; }
 
     /* ── INFO BANNER ── */
     .info-banner {
@@ -562,8 +593,16 @@
 <body>
 <!-- HEADER -->
 <div class="header">
-  <h1>SW11  |  LDC Sub-Consultant Monitoring Workflow  +  AOR Authority Approvals  |  Stage 3 DD</h1>
-  <p>Dubai Creek Harbour – Plot SW11  &nbsp;·&nbsp;  Design Tomorrow FZ-LLC (LDC) + Zutari (AOR)  &nbsp;·&nbsp;  LOA 8348  &nbsp;·&nbsp;  AOR Report: DCH-SW11-ZUT-RPT-SD-AOR-400001 Rev.4 (19-Feb-26)</p>
+  <div class="header-logo-wrap" id="logoWrap" title="Click to upload logo JPEG">
+    <span class="logo-placeholder-icon">&#128444;&#65039;</span>
+    <span class="logo-placeholder-text">Upload<br>Logo</span>
+    <input type="file" accept="image/*" onchange="handleLogoUpload(event)" />
+    <button class="logo-remove-btn" id="logoRemoveBtn" onclick="removeLogo(event)" title="Remove logo">&#10005;</button>
+  </div>
+  <div class="header-text">
+    <h1 contenteditable="true" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">SW11  |  LDC Sub-Consultant Monitoring Workflow  +  AOR Authority Approvals  |  Stage 3 DD</h1>
+    <p contenteditable="true" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">Dubai Creek Harbour &#8211; Plot SW11 &nbsp;&middot;&nbsp;  Design Tomorrow FZ-LLC (LDC) + Zutari (AOR) &nbsp;&middot;&nbsp;  LOA 8348 &nbsp;&middot;&nbsp;  AOR Report: DCH-SW11-ZUT-RPT-SD-AOR-400001 Rev.4 (19-Feb-26)</p>
+  </div>
 </div>
 
 <!-- CONTROLS -->
@@ -1762,6 +1801,40 @@ function loadState() {
 // ═══════════════════════════════════════════════
 loadState();
 render();
+
+// ── LOGO UPLOAD ──
+function handleLogoUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const wrap = document.getElementById('logoWrap');
+    const icon = wrap.querySelector('.logo-placeholder-icon');
+    const txt  = wrap.querySelector('.logo-placeholder-text');
+    if (icon) icon.style.display = 'none';
+    if (txt)  txt.style.display  = 'none';
+    let img = wrap.querySelector('img');
+    if (!img) { img = document.createElement('img'); wrap.insertBefore(img, wrap.querySelector('input')); }
+    img.src = ev.target.result;
+    img.alt = 'Logo';
+    const rmBtn = document.getElementById('logoRemoveBtn');
+    if (rmBtn) rmBtn.style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+}
+function removeLogo(e) {
+  e.stopPropagation();
+  const wrap = document.getElementById('logoWrap');
+  const img = wrap.querySelector('img');
+  if (img) img.remove();
+  wrap.querySelector('.logo-placeholder-icon').style.display = '';
+  wrap.querySelector('.logo-placeholder-text').style.display = '';
+  const rmBtn = document.getElementById('logoRemoveBtn');
+  if (rmBtn) rmBtn.style.display = 'none';
+  const input = wrap.querySelector('input[type="file"]');
+  if (input) input.value = '';
+}
+
 </script>
 </body>
 </html>
