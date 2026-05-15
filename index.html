@@ -1609,7 +1609,7 @@ function render() {
       let lastPhase = null;
       discTasks.forEach(t => {
         if (t.phase !== lastPhase) {
-          html += buildPhaseHeader(t.phase);
+          html += buildPhaseHeader(t.phase, disc.id);
           lastPhase = t.phase;
         }
         html += buildTaskRow(t);
