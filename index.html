@@ -123,6 +123,8 @@
     .btn-success:hover { background: #505050; }
     .btn-blue { background: #727272; color: #ffffff; }
     .btn-blue:hover { background: #4c4c4c; }
+    .btn-grey { background: #a0a0a0; color: #ffffff; }
+    .btn-grey:hover { background: #808080; }
     .btn-pdf { background: #707070; color: #ffffff; }
     .btn-pdf:hover { background: #5d5d5d; }
     .btn-save { background: #7b7b7b; color: #ffffff; }
@@ -377,6 +379,17 @@
       padding: 4px 2px;
     }
     .week-hdr.add-col:hover { background: #262626; }
+.week-hdr.rem-col {
+  flex: none;
+  width: 34px;
+  cursor: pointer;
+  color: #a07070;
+  border-left: 2px dashed #404040;
+  font-size: 18px;
+  font-weight: 300;
+  padding: 4px 2px;
+}
+.week-hdr.rem-col:hover { background: #2a1010; color: #ff8888; }
 
     /* ── TASK INFO ── */
     .task-no-text {
@@ -613,6 +626,7 @@
     <span class="ctrl-label">Week 1 Start:</span>
     <input type="date" class="ctrl-input" id="startDateInput" onchange="onStartDateChange(this.value)"/>
   </div>
+  <button class="btn btn-grey" onclick="removeWeekColumn()" title="Remove last week column">－ Week</button>
   <button class="btn btn-blue" onclick="addWeekColumn()">＋ Add Week</button>
   <button class="btn btn-success" onclick="addGlobalTask()">＋ Add Task</button>
   <button class="btn btn-pdf" onclick="savePDF()">🖨 Save PDF</button>
@@ -1138,7 +1152,7 @@ function buildHeaderRow() {
     const lbl = weekLabel(i);
     weekCells += `<div class="week-hdr"><span class="wn">Wk ${i}</span>${lbl?`<span class="wd">${lbl}</span>`:''}</div>`;
   }
-  weekCells += `<div class="week-hdr add-col" title="Add week column" onclick="addWeekColumn()">＋</div>`;
+  weekCells += `<div class="week-hdr rem-col" title="Remove last week" onclick="removeWeekColumn()">－</div><div class="week-hdr add-col" title="Add week column" onclick="addWeekColumn()">＋</div>`;
   return `
   <div class="g-row hdr">
     <div class="c-no hdr-cell">No.</div>
@@ -1669,6 +1683,18 @@ function addWeekColumn() {
   // Scroll to reveal new column
   const outer = document.querySelector('.gantt-outer');
   if (outer) outer.scrollLeft = outer.scrollWidth;
+}
+function removeWeekColumn() {
+  if (numWeeks <= 1) return;
+  numWeeks--;
+  // Clamp any bars that overhang the new last week
+  tasks.forEach(t => {
+    if (t.wStart > numWeeks) t.wStart = numWeeks;
+    if (t.wEnd   > numWeeks) t.wEnd   = numWeeks;
+    if (t.wStart > t.wEnd)   t.wStart = t.wEnd;
+    if (t.ms != null && t.ms > numWeeks) t.ms = numWeeks;
+  });
+  render();
 }
 
 function onStartDateChange(val) {
