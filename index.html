@@ -1592,7 +1592,7 @@ function addTaskToDisc(discId) {
   tasks.push({ id, disc: discId, type: 'task', phase: lastPhase,
     no: discId.toUpperCase() + '-' + id,
     name: 'New Task – click to edit', sub: 'Input: click to edit',
-    pm: 'PM Lead', sc: '–', wStart: 1, wEnd: 2,
+        pm: 'PM Lead', sc: '–', wStart: 1, wEnd: 1,
     status: 'Not Started', color: disc.color });
   render();
   setTimeout(() => {
