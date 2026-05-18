@@ -351,7 +351,7 @@
     .c-timeline { flex: 1; position: relative; min-width: 720px; }
 
     /* ── WEEK HEADERS ── */
-    .week-hdrs { display: flex; }
+      .week-hdrs { display: flex; position: relative; }
     .week-hdr {
       flex: 1;
       text-align: center;
@@ -368,8 +368,8 @@
     .week-hdr:last-child { border-right: none; }
     .week-hdr .wn { display: block; }
     .week-hdr .wd { display: block; font-size: 8px; font-weight: 400; color: #a4a4a4; margin-top: 1px; }
-    .week-hdr.add-col {
-      flex: none;
+      .wk-ctrl.add-col {}
+          position: absolute; right: 34px; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center;
       width: 34px;
       cursor: pointer;
       color: #7b7b7b;
@@ -378,9 +378,9 @@
       font-weight: 300;
       padding: 4px 2px;
     }
-    .week-hdr.add-col:hover { background: #262626; }
-.week-hdr.rem-col {
-  flex: none;
+      .wk-ctrl.add-col:hover { background: #262626; }
+  .wk-ctrl.rem-col {}
+      position: absolute; right: 0; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center;
   width: 34px;
   min-width: 0;
   cursor: pointer;
@@ -392,7 +392,7 @@
   text-align: center;
   line-height: 1;
 }
-.week-hdr.rem-col:hover { background: #2a1010; color: #ff8888; }
+  .wk-ctrl.rem-col:hover { background: #2a1010; color: #ff8888; }
 
     /* ── TASK INFO ── */
     .task-no-text {
@@ -1155,7 +1155,7 @@ function buildHeaderRow() {
     const lbl = weekLabel(i);
     weekCells += `<div class="week-hdr"><span class="wn">Wk ${i}</span>${lbl?`<span class="wd">${lbl}</span>`:''}</div>`;
   }
-  weekCells += `<div class="week-hdr rem-col" title="Remove last week" onclick="removeWeekColumn()">－</div><div class="week-hdr add-col" title="Add week column" onclick="addWeekColumn()">＋</div>`;
+    weekCells += `<div class="wk-ctrl rem-col" title="Remove last week" onclick="removeWeekColumn()">－</div><div class="wk-ctrl add-col" title="Add week column" onclick="addWeekColumn()">＋</div>`;
   return `
   <div class="g-row hdr">
     <div class="c-no hdr-cell">No.</div>
