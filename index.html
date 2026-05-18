@@ -382,12 +382,15 @@
 .week-hdr.rem-col {
   flex: none;
   width: 34px;
+  min-width: 0;
   cursor: pointer;
   color: #a07070;
   border-left: 2px dashed #404040;
   font-size: 18px;
   font-weight: 300;
   padding: 4px 2px;
+  text-align: center;
+  line-height: 1;
 }
 .week-hdr.rem-col:hover { background: #2a1010; color: #ff8888; }
 
@@ -593,7 +596,7 @@
       @page { size: A2 landscape; margin: 8mm; }
       body { background: white; padding: 4mm; }
       .controls, .tip, .btn, .del-btn, .add-row-btn,
-      .bar-handle, .week-hdr.add-col { display: none !important; }
+      .bar-handle, .week-hdr.add-col, .week-hdr.rem-col { display: none !important; }
       .gantt-outer { overflow: visible; box-shadow: none; }
       .gantt-wrap  { border-radius: 0; }
       .header, .info-banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 0; }
