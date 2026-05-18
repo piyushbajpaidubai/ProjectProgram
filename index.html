@@ -1782,23 +1782,24 @@ const LS_KEY = 'sw11_tracker_v1';
 
 function saveState() {
   try {
+    const h1El = document.querySelector('.header h1');
+    const pEl  = document.querySelector('.header p');
+    const imgEl = document.querySelector('#logoWrap img');
     const state = {
       tasks: tasks,
       numWeeks: numWeeks,
       weekStartDate: weekStartDate ? weekStartDate.toISOString() : null,
-      nextId: nextId
+      nextId: nextId,
+      headerH1: h1El ? h1El.textContent : null,
+      headerPara: pEl ? pEl.textContent : null,
+      discConfig: DISC_CONFIG,
+      logoDataUrl: (imgEl && imgEl.src && imgEl.src.startsWith('data:')) ? imgEl.src : null
     };
     localStorage.setItem(LS_KEY, JSON.stringify(state));
     const btn = document.getElementById('saveBtn');
-    if (btn) {
-      const orig = btn.innerHTML;
-      btn.innerHTML = '&#10003; Saved!';
-      btn.classList.add('saved');
-      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('saved'); }, 1800);
-    }
-  } catch(e) { alert('Save failed: ' + e.message); }
+    if (btn) { btn.classList.add('saved'); setTimeout(() => btn.classList.remove('saved'), 2000); }
+  } catch (e) { console.warn('Save failed', e); }
 }
-
 function loadState() {
   try {
     const raw = localStorage.getItem(LS_KEY);
@@ -1809,15 +1810,38 @@ function loadState() {
       numWeeks = state.numWeeks || 16;
       weekStartDate = state.weekStartDate ? new Date(state.weekStartDate) : null;
       nextId = state.nextId || 200;
-      if (weekStartDate) {
-        const inp = document.getElementById('startDateInput');
-        if (inp) inp.value = weekStartDate.toISOString().substring(0,10);
+      if (state.headerH1 != null) {
+        const h1El = document.querySelector('.header h1');
+        if (h1El) h1El.textContent = state.headerH1;
+      }
+      if (state.headerPara != null) {
+        const pEl = document.querySelector('.header p');
+        if (pEl) pEl.textContent = state.headerPara;
+      }
+      if (state.discConfig && Array.isArray(state.discConfig)) {
+        DISC_CONFIG.length = 0;
+        state.discConfig.forEach(d => DISC_CONFIG.push(d));
+        DISC_CONFIG.forEach(d => { DISC_MAP[d.id] = d; });
+      }
+      if (state.logoDataUrl) {
+        const wrap = document.getElementById('logoWrap');
+        if (wrap) {
+          let img = wrap.querySelector('img');
+          if (!img) {
+            img = document.createElement('img');
+            wrap.insertBefore(img, wrap.firstChild);
+          }
+          img.src = state.logoDataUrl;
+          wrap.querySelectorAll('.logo-placeholder-icon, .logo-placeholder-text')
+              .forEach(el => el.style.display = 'none');
+        }
       }
       return true;
     }
-  } catch(e) { console.warn('loadState failed:', e); }
+  } catch (e) { console.warn('Load failed', e); }
   return false;
 }
+
 
 //  INIT
 // ═══════════════════════════════════════════════
@@ -1825,37 +1849,47 @@ loadState();
 render();
 
 // ── LOGO UPLOAD ──
-function handleLogoUpload(e) {
-  const file = e.target.files[0];
+function handleLogoUpload(event) {
+  const file = event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = function(ev) {
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
     const wrap = document.getElementById('logoWrap');
-    const icon = wrap.querySelector('.logo-placeholder-icon');
-    const txt  = wrap.querySelector('.logo-placeholder-text');
-    if (icon) icon.style.display = 'none';
-    if (txt)  txt.style.display  = 'none';
     let img = wrap.querySelector('img');
-    if (!img) { img = document.createElement('img'); wrap.insertBefore(img, wrap.querySelector('input')); }
-    img.src = ev.target.result;
-    img.alt = 'Logo';
-    const rmBtn = document.getElementById('logoRemoveBtn');
-    if (rmBtn) rmBtn.style.display = 'flex';
+    if (!img) {
+      img = document.createElement('img');
+      wrap.insertBefore(img, wrap.firstChild);
+    }
+    img.src = dataUrl;
+    wrap.querySelectorAll('.logo-placeholder-icon, .logo-placeholder-text')
+        .forEach(el => el.style.display = 'none');
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      const state = raw ? JSON.parse(raw) : {};
+      state.logoDataUrl = dataUrl;
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+    } catch(ex) { console.warn('Logo save failed', ex); }
   };
   reader.readAsDataURL(file);
 }
-function removeLogo(e) {
-  e.stopPropagation();
+function removeLogo(event) {
+  event.stopPropagation();
   const wrap = document.getElementById('logoWrap');
-  const img = wrap.querySelector('img');
+  const img = wrap ? wrap.querySelector('img') : null;
   if (img) img.remove();
-  wrap.querySelector('.logo-placeholder-icon').style.display = '';
-  wrap.querySelector('.logo-placeholder-text').style.display = '';
-  const rmBtn = document.getElementById('logoRemoveBtn');
-  if (rmBtn) rmBtn.style.display = 'none';
-  const input = wrap.querySelector('input[type="file"]');
-  if (input) input.value = '';
+  if (wrap) wrap.querySelectorAll('.logo-placeholder-icon, .logo-placeholder-text')
+                 .forEach(el => el.style.display = '');
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) {
+      const state = JSON.parse(raw);
+      delete state.logoDataUrl;
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+    }
+  } catch(ex) { console.warn('Logo remove failed', ex); }
 }
+
 
 </script>
 </body>
