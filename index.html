@@ -1130,7 +1130,7 @@ function buildFilterTabs() {
     const cnt = tasks.filter(t => t.disc === d.id).length;
     html += `<button class="filter-tab${activeFilter===d.id?' active':''}" onclick="setFilter('${d.id}')"
       style="${activeFilter===d.id?`background:${d.color};border-color:${d.color};`:''}"
-    >${d.short} <span style="opacity:0.65">(${cnt})</span></button>`;
+    >${d.label} <span style="opacity:0.65">(${cnt})</span></button>`;
   });
   tabs.innerHTML = html;
 }
@@ -1466,7 +1466,7 @@ function renderLegend() {
     `<div class="legend-item"><div class="legend-dot" style="background:${st.bg};border:1.5px solid ${st.color}"></div>${s}</div>`
   ).join('');
   const discItems = DISC_CONFIG.map(d =>
-    `<div class="legend-item"><div class="legend-dot" style="background:${d.color}"></div>${d.short}</div>`
+    `<div class="legend-item"><div class="legend-dot" style="background:${d.color}"></div>${d.label}</div>`
   ).join('');
   document.getElementById('legend').innerHTML =
     `<div style="display:flex;flex-wrap:wrap;gap:10px;width:100%">
