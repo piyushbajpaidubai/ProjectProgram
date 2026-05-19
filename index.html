@@ -1407,7 +1407,7 @@ function renameDisc(discId, newLabel) {
 function buildAddRowBtn(discId) {
   return '<div class="g-row" style="min-height:0;display:flex;">' +
     '<button class="add-row-btn" style="flex:1;" onclick="addTaskToDisc(\'' + discId + '\')">' +
-    '<span class="plus">+</span> Add task to ' + DISC_MAP[discId].short + '</button>' +
+    '<span class="plus">+</span> Add task to ' + DISC_MAP[discId].label + '</button>' +
     '<button class="add-milestone-btn" onclick="addMilestoneToDisc(\'' + discId + '\')" title="Add milestone symbol row">' +
     '&#9670; Add Milestone Row</button>' +
     '</div>';
