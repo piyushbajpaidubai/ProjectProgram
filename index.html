@@ -394,6 +394,24 @@
 }
   .wk-ctrl.rem-col:hover { background: #2a1010; color: #ff8888; }
 
+/* ── DAY HEADERS ── */
+.day-hdrs { display: flex; }
+.day-hdr {
+  flex: 1;
+  text-align: center;
+  padding: 3px 0;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  font-size: 7px;
+  font-weight: 700;
+  color: #888;
+  min-width: 0;
+  letter-spacing: 0;
+}
+.day-hdr:last-child { border-right: none; }
+.day-hdr.weekend { color: #606060; }
+.day-grid-line { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(0,0,0,0.04); pointer-events: none; z-index: 0; }
+.day-grid-line.weekend-line { background: rgba(0,0,0,0.07); }
+
     /* ── TASK INFO ── */
     .task-no-text {
       font-size: 9px; font-weight: 800; color: #727272;
@@ -1150,10 +1168,14 @@ function initHeaderScrollSync() {
 }
 
 function buildHeaderRow() {
+  const DAYS = ['S','S','M','T','W','T','F'];
   let weekCells = '';
   for (let i = 1; i <= numWeeks; i++) {
     const lbl = weekLabel(i);
-    weekCells += `<div class="week-hdr"><span class="wn">Wk ${i}</span>${lbl?`<span class="wd">${lbl}</span>`:''}</div>`;
+    const dayCells = DAYS.map((d,di) =>
+      `<div class="day-hdr${(di===0||di===1)?' weekend':''}">${d}</div>`
+    ).join('');
+    weekCells += `<div class="week-hdr"><span class="wn">Wk ${i}</span>${lbl?`<span class="wd">${lbl}</span>`:''}<div class="day-hdrs">${dayCells}</div></div>`;
   }
     weekCells += `<div class="wk-ctrl rem-col" title="Remove last week" onclick="removeWeekColumn()">－</div><div class="wk-ctrl add-col" title="Add week column" onclick="addWeekColumn()">＋</div>`;
   return `
@@ -1166,9 +1188,18 @@ function buildHeaderRow() {
     <div class="c-timeline"><div class="week-hdrs">${weekCells}</div></div>
   </div>`;
 }
-
 function buildGridLines() {
   let html = '';
+  const totalDays = numWeeks * 7;
+  // Day-level grid lines
+  for (let d = 1; d < totalDays; d++) {
+    const isWeekBoundary = (d % 7 === 0);
+    const isWeekend = (d % 7 === 1 || d % 7 === 2);
+    if (isWeekBoundary) continue;
+    const leftPct = (d / totalDays) * 100;
+    html += `<div class="${isWeekend?'day-grid-line weekend-line':'day-grid-line'}" style="left:${leftPct.toFixed(4)}%"></div>`;
+  }
+  // Week boundary lines
   for (let i = 1; i < numWeeks; i++) {
     html += `<div class="grid-line" style="left:${pct(i)}%"></div>`;
   }
@@ -1178,7 +1209,6 @@ function buildGridLines() {
   }
   return html;
 }
-
 function barStyle(task) {
   const l = pct(task.wStart - 1);
   const w = pct(task.wEnd - task.wStart + 1);
@@ -1506,7 +1536,8 @@ document.addEventListener('mousemove', e => {
   if (!task || !barEl) return;
 
   const deltaX = e.clientX - startX;
-  const snapDelta = Math.round(deltaX / weekWidth);
+  const dayWidth = weekWidth / 7;
+  const snapDelta = Math.round(deltaX / dayWidth) / 7;
   const dur = origEnd - origStart;
   const N = numWeeks;
 
@@ -1564,7 +1595,8 @@ document.addEventListener('mousemove', function(e) {
   const { taskId, dIdx, startX, origWeek, weekWidth } = msDrag;
   const task = tasks.find(t => t.id === taskId);
   if (!task || !task.markers) return;
-  const delta = Math.round((e.clientX - startX) / weekWidth);
+  const dayWidthMs = weekWidth / 7;
+  const delta = Math.round((e.clientX - startX) / dayWidthMs) / 7;
   task.markers[dIdx].week = Math.max(1, Math.min(origWeek + delta, numWeeks));
   const tlEl = document.getElementById('tl-' + taskId);
   if (tlEl) tlEl.innerHTML = buildMilestoneTimeline(task) + buildAddMarkerBtn(taskId);
